@@ -317,6 +317,32 @@
     {
       "type": "Feature",
       "properties": {
+        "id": "facfe1cd-b348-4d30-a3f5-71ce218a3a2f",
+        "name": "Asociación de Vecinos Buenos Amigos Casillas del Ángel",
+        "sector": "Servicios",
+        "municipality": "Puerto del Rosario",
+        "province": "Las Palmas",
+        "island": "Fuerteventura",
+        "address": "Calle Casillas del Ángel, 92; 35611, Puerto del Rosario, Las Palmas",
+        "phones": [
+          "669 091 001"
+        ],
+        "emails": [
+          "aavvbuenosamigos@gmail.com"
+        ],
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -13.9752,
+          28.4981
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "id": "4edcb180-d12f-4005-8e3d-9e30dab5b850",
         "name": "Asociación Social Proyecto Ikual",
         "sector": "Proyecto",
@@ -441,6 +467,32 @@
         "coordinates": [
           -13.8652641,
           28.4944663
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "c2b871cf-3778-4018-9595-94b6a0548461",
+        "name": "Fundación Once",
+        "sector": "Programa",
+        "municipality": "Puerto del Rosario",
+        "province": "Las Palmas",
+        "island": "Fuerteventura",
+        "address": "Calle Luis Fajardo Ferrer nº1, 35500 Arrecife. Las Palmas.\nCalle Doctor Fleming nº1, 35600 Puerto del Rosario, Las Palmas. (Atención los miércoles en el centro insular de Juventud.",
+        "phones": [
+          "677 992 868"
+        ],
+        "emails": [
+          "dperezp.inserta@fundaciononce.es"
+        ],
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -13.8619747,
+          28.4958449
         ]
       }
     },
@@ -1817,6 +1869,32 @@
     {
       "type": "Feature",
       "properties": {
+        "id": "46496f9e-2822-466b-9992-a4347d5b120d",
+        "name": "Asociación Socio Cultural Montaña del Cardón",
+        "sector": "Servicios",
+        "municipality": "Pájara",
+        "province": "Las Palmas",
+        "island": "Fuerteventura",
+        "address": "Calle Vicente Soto, 8; 35628, Pájara, Las Palmas",
+        "phones": [
+          "699 291 896"
+        ],
+        "emails": [
+          "gonzalezmoralesj@gmail.com"
+        ],
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -14.1081189,
+          28.35
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "id": "aa83dd69-cd3e-4479-9e46-a96654044443",
         "name": "Punto de Encuentro Familiar, Programa La Fortaleza",
         "sector": "Programa",
@@ -2095,8 +2173,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -14.662797,
-          27.9453896
+          -13.99371802,
+          28.52508234
         ]
       }
     },
@@ -2251,8 +2329,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -14.662797,
-          27.9453896
+          -14.06345,
+          28.54351
         ]
       }
     },
