@@ -10,15 +10,18 @@ esta isla.
 ## Datos siempre al día (sin tocar código)
 
 ```
-Google Sheet "Mapa de agentes (respuestas)"   ← formulario público, sin login
-        │  cada hora
+Google Sheet "Mapa de agentes (respuestas)"     ← formulario, respuestas en bruto
+        │
+        ▼  Apps Script "Fuerteventura Protagonista" (cada noche ~03:00)
+        │   - geocodifica cada dirección
+        │   - normaliza Municipio a los 6 oficiales
         ▼
-GitHub Actions (.github/workflows/sync-sheet.yml)
-        │  scripts/sync_sheet.py:
-        │    1. descarga el Sheet como CSV público (sin credenciales)
-        │    2. filtra filas sin consentimiento de protección de datos
-        │    3. geolocaliza "Dirección + Municipio" con Mapbox Geocoding API
-        │       (cache en scripts/geocode-cache.json para no repetir llamadas)
+Google Sheet "TEST - Fuerteventura Protagonista" ← ya con Latitud/Longitud
+        │  (público solo lectura por enlace)
+        │
+        ▼  GitHub Actions (.github/workflows/sync-sheet.yml, diario 04:30 UTC)
+        │   scripts/sync_sheet.py: descarga el CSV, valida que las
+        │   coordenadas caen dentro de Fuerteventura, descarta el resto
         ▼
 empresas.geojson
         │
@@ -29,42 +32,46 @@ mapa.html  (servido por GitHub Pages)
 <iframe> en la página en blanco de WordPress
 ```
 
-El Sheet original es de solo lectura para cualquiera con el enlace — por
-eso no hace falta cuenta de servicio de Google ni OAuth, a diferencia del
-mapa de Canarias Convive (ese Sheet sí es privado).
+El geocoding y la normalización de municipios **ya los hace el Apps
+Script del Sheet**, no nuestro pipeline — así que la Action de este repo
+no necesita ninguna credencial de Mapbox ni de Google: el Sheet migrado
+es de solo lectura para cualquiera con el enlace, y solo hace falta
+descargarlo como CSV.
 
 ### Columnas que usa el script (por posición, ver `scripts/sync_sheet.py::COL`)
-`Nombre de la entidad`, `Tipología`, `Nombre del Programa/Proyecto/Servicio`,
-`Periodo de ejecución`, `Municipio`, `Dirección`, `Teléfono`, `Correo
-electrónico`, `Descripción` y las dos columnas `Política de protección de
-datos` (una fila solo se publica si ambas dicen "Si doy mi consentimiento").
-Si el formulario cambia de orden de columnas, actualizar los índices en
-`COL`.
+`ID, Nombre, Tipología, Municipio, Provincia, Isla, Dirección, Latitud,
+Longitud, Teléfonos, Emails, Web, Descripción, Periodo`. Si el Apps
+Script cambia el orden de columnas, actualizar los índices en `COL`.
 
-## Dos tokens de Mapbox — no confundir
+Filas sin coordenadas válidas o con coordenadas fuera de Fuerteventura se
+descartan con un aviso (`::warning::`) en el log de la Action — por
+ejemplo, una entidad con sede fuera de la isla no debe aparecer en este
+mapa aunque esté en el Sheet.
+
+## El único token que hace falta: Mapbox público (para pintar el mapa)
 
 | Token | Tipo | Dónde vive | Para qué |
 |---|---|---|---|
 | Público (`pk.xxx`) | restringido por dominio (URL) | `mapa.html` → `CONFIG.MAPBOX_TOKEN`, visible en el navegador | Pintar el mapa en el navegador del visitante |
-| Secreto (`sk.xxx`) | scope **Geocoding: Read** únicamente | Secret de GitHub Actions `MAPBOX_GEOCODING_TOKEN` | Geolocalizar direcciones desde la Action (llamada servidor-a-servidor) |
 
-Ambos se crean en la **misma cuenta de Mapbox** que ya tenéis — no hace
-falta una cuenta nueva, solo dos tokens separados y con permisos distintos
-(el público nunca debe tener scopes de más; el secreto nunca debe pegarse
-en el HTML).
+No hace falta ningún token secreto: el geocoding ya está hecho por el
+Apps Script, así que esta Action no llama a ninguna API de pago.
 
 ## Puesta en marcha
 
-### 1. Mapbox
+### 1. Mapbox — un único token público
 1. [account.mapbox.com/access-tokens](https://account.mapbox.com/access-tokens/) → **Create a token**.
-2. Token público → marcar solo scopes públicos por defecto → en "URL restrictions" añadir vuestro dominio y el de GitHub Pages → pegarlo en `mapa.html` (`CONFIG.MAPBOX_TOKEN`).
-3. Otro token → desmarcar todo → activar solo **Geocoding: Read** (bajo "Secret scopes") → se genera como `sk.xxx`, cópialo una vez (no se puede volver a ver) → va como secret `MAPBOX_GEOCODING_TOKEN` en GitHub (paso 4).
+2. Scopes públicos por defecto → en "URL restrictions" añadir `fuerteventuraprotagonista.com/*` y `proyectoscomunitarios.github.io/*`.
+3. Pegarlo en `mapa.html` → `CONFIG.MAPBOX_TOKEN`.
 4. (Opcional) estilo propio en Mapbox Studio con la paleta de Fuerteventura Protagonista → su URL en `CONFIG.MAP_STYLE`.
 
-### 2. GitHub — variables y secretos del repo
-`Settings → Secrets and variables → Actions`:
-- **Variables**: `SHEET_ID` = `1vw2hiJVlsvFbPRhmPKPevJe74nA5MPk1U_cWzfbuoU8`, `SHEET_GID` = `318064612`.
-- **Secrets**: `MAPBOX_GEOCODING_TOKEN` = el `sk.xxx` del paso anterior.
+### 2. GitHub — variables del repo
+`Settings → Secrets and variables → Actions → Variables` (ya configuradas):
+- `SHEET_ID` = `1m1UVzUPzZdOBWmSFShpe8835YpWmHdWXnVtW7531tUY`
+- `SHEET_GID` = `1122673843`
+
+Si en algún momento se creó el secret `MAPBOX_GEOCODING_TOKEN` de una
+versión anterior de este pipeline, ya no se usa — se puede borrar.
 
 ### 3. GitHub Pages
 Ya activado sobre `main` / `(root)`. Visor en producción:
@@ -81,10 +88,9 @@ ese `<iframe>` apuntando a la URL de GitHub Pages, enlazada desde el menú
 ```
 mapa.html                        # Visor self-contained (HTML+CSS+JS, sin build)
 empresas.geojson                 # Datos — los regenera la Action, NO editar a mano
-scripts/sync_sheet.py            # Sheet (CSV público) → geocoding → empresas.geojson
-scripts/geocode-cache.json       # Cache de geocoding — SÍ se commitea (evita re-geocodificar)
+scripts/sync_sheet.py            # Sheet migrado (CSV público) → empresas.geojson
 scripts/requirements.txt
-.github/workflows/sync-sheet.yml # Sync horaria
+.github/workflows/sync-sheet.yml # Sync diaria
 wordpress-embed.html             # Snippet de iframe para pegar en WordPress
 ```
 
@@ -102,16 +108,15 @@ porque leen directamente `empresas.geojson`.
 Para probar la sincronización sin esperar a la Action:
 
 ```bash
-export SHEET_ID=1vw2hiJVlsvFbPRhmPKPevJe74nA5MPk1U_cWzfbuoU8
-export SHEET_GID=318064612
-export MAPBOX_GEOCODING_TOKEN=sk.xxx
+export SHEET_ID=1m1UVzUPzZdOBWmSFShpe8835YpWmHdWXnVtW7531tUY
+export SHEET_GID=1122673843
 python3 scripts/sync_sheet.py
 ```
 
 ## Por qué GitHub y no solo WordPress
 
 - **GitHub Pages**: hosting estático gratuito para el visor — no ocupa espacio ni PHP del hosting de WordPress.
-- **GitHub Actions**: automatiza Sheet → geocoding → geojson. Sin esto, cada alta habría que geolocalizarla y subirla a mano.
+- **GitHub Actions**: automatiza el último paso (Sheet migrado → geojson). El geocoding en sí ya lo resuelve el Apps Script del equipo.
 
 WordPress solo aloja la página que enmarca el mapa con un `<iframe>`; no
 necesita ningún plugin de Mapbox.
