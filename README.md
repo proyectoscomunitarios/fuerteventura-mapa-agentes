@@ -67,8 +67,8 @@ en el HTML).
 - **Secrets**: `MAPBOX_GEOCODING_TOKEN` = el `sk.xxx` del paso anterior.
 
 ### 3. GitHub Pages
-`Settings → Pages → Source: Deploy from a branch → main / (root)`. La URL quedará:
-`https://TU_USUARIO.github.io/fuerteventura-mapa-agentes/mapa.html`
+Ya activado sobre `main` / `(root)`. Visor en producción:
+`https://proyectoscomunitarios.github.io/fuerteventura-mapa-agentes/mapa.html`
 
 ### 4. WordPress
 Ver [`wordpress-embed.html`](wordpress-embed.html): página nueva con
