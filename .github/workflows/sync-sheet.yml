@@ -1,9 +1,9 @@
-name: Sync Sheet → empresas.geojson
+name: Sync Sheet → entities.geojson
 
 # Descarga el CSV público del Sheet YA MIGRADO (Latitud/Longitud y
 # Municipio normalizado, generado cada noche ~03:00 por el Apps Script
 # "Fuerteventura Protagonista" a partir de las respuestas del formulario)
-# y regenera empresas.geojson. Si hay cambios respecto a lo que hay en
+# y regenera entities.geojson. Si hay cambios respecto a lo que hay en
 # git, los commitea.
 #
 # No hace falta ninguna credencial: el Sheet es de solo lectura por
@@ -31,7 +31,7 @@ jobs:
       - name: Instalar dependencias
         run: pip install --quiet -r scripts/requirements.txt
 
-      - name: Generar empresas.geojson desde el Sheet migrado
+      - name: Generar entities.geojson desde el Sheet migrado
         env:
           # ID y gid del Sheet migrado (de la URL: /d/<SHEET_ID>/edit?gid=<SHEET_GID>).
           # No son sensibles: Settings → Secrets and variables → Actions → Variables.
@@ -43,6 +43,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add empresas.geojson
-          git diff --cached --quiet && echo "Sin cambios" || git commit -m "Sync: actualizar empresas.geojson desde el Sheet ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
+          git add entities.geojson
+          git diff --cached --quiet && echo "Sin cambios" || git commit -m "Sync: actualizar entities.geojson desde el Sheet ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
           git push
