@@ -1,11 +1,1045 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="refresh" content="0; url=mapa.html">
-<title>Mapa de Agentes — Fuerteventura Protagonista</title>
+<meta charset="UTF-8" />
+<title>Fuerteventura Protagonista — Mapa de agentes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.21.0/mapbox-gl.css" rel="stylesheet"
+      integrity="sha384-EP/H7vnAWQ5LW9GnEKFrWdLNFs5Ar50IJgtlPCBzA/mZRKZrR+/rMG5kXl5QNyCp"
+      crossorigin="anonymous" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.21.0/mapbox-gl.js"
+        integrity="sha384-5kuWTSgWp7o0q4Mw8nndFaZqiHFMR1ypa8Xlv3Ef0eXMKYdWPwa5+335eGOMhx+r"
+        crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@turf/turf@7.3.5/turf.min.js"
+        integrity="sha384-BQF91ViEyKh73QVOKMd0MfkJ7bWbu+o0g448Qfb7aP3HVPItiy/4UZ7OuTCUDKNi"
+        crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<p>Redirigiendo al <a href="mapa.html">mapa de agentes</a>...</p>
+<div id="container">
+  <aside id="sidebar">
+    <button type="button" class="drag-handle" id="drag-handle" aria-label="Mostrar u ocultar panel" aria-expanded="false"></button>
+    <header class="sidebar-header">
+      <h1>Fuerteventura Protagonista</h1>
+      <p>Mapa de agentes</p>
+    </header>
+    <div class="view-list" id="view-list">
+      <div class="sidebar-search">
+        <label for="search" class="visually-hidden">Buscar entidades</label>
+        <input id="search" class="search-input" type="search" placeholder="Buscar por nombre, municipio, sector…" autocomplete="off" aria-describedby="search-help" />
+        <span id="search-help" class="visually-hidden">Filtra la lista por nombre, municipio, provincia, dirección, sector o protagonista.</span>
+      </div>
+      <div class="controls" role="group" aria-label="Vista del mapa">
+        <button type="button" id="btn-2d" class="active" aria-pressed="true">2D</button>
+        <button type="button" id="btn-3d" aria-pressed="false">3D</button>
+        <button type="button" id="btn-fit">Centrar</button>
+      </div>
+      <div id="filter-sections"></div>
+      <div class="results-header" aria-live="polite">
+        <span><strong id="results-count">—</strong> entidades</span>
+        <button type="button" id="btn-clear-filters" class="btn-clear" hidden>Limpiar filtros</button>
+      </div>
+      <div class="entity-list" id="entity-list"></div>
+    </div>
+    <div class="view-detail" id="view-detail"></div>
+  </aside>
+  <div id="map"></div>
+  <div class="demo-banner">PROTOTIPO · datos provisionales</div>
+</div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2FuYXJpYXMtY29udml2ZSIsImEiOiJjbXNzdW1ubHQwZGY5MnlyMTNxMTRrOHJ0In0.o82cxJMkVETeHcx-5hjmXA';
+
+const MAPBOX_STYLE_URL = 'mapbox://styles/mapbox/light-v11';
+const DATA_VERSION = '2026-05-21-1';
+const GEOJSON_URL = 'entities.geojson';
+const FUERTEVENTURA_BOUNDS = [[-14.55, 28.02], [-13.78, 28.78]];
+const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1']);
+const SEARCH_PARAMS = new URLSearchParams(window.location.search);
+const USE_LOCAL_BASEMAP = LOCAL_HOSTS.has(window.location.hostname) && !SEARCH_PARAMS.has('mapbox');
+const LOCAL_RASTER_STYLE = {
+  version: 8,
+  glyphs: 'https://api.mapbox.com/fonts/v1/mapbox/{fontstack}/{range}.pbf?access_token=' + mapboxgl.accessToken,
+  sources: {
+    'osm-raster': {
+      type: 'raster',
+      tiles: [
+        'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'
+      ],
+      tileSize: 256,
+      attribution: '&copy; OpenStreetMap contributors'
+    }
+  },
+  layers: [
+    {
+      id: 'osm-raster',
+      type: 'raster',
+      source: 'osm-raster',
+      paint: {
+        'raster-opacity': 0.72,
+        'raster-saturation': -0.65,
+        'raster-contrast': -0.08
+      }
+    }
+  ]
+};
+const MAP_STYLE = USE_LOCAL_BASEMAP ? LOCAL_RASTER_STYLE : MAPBOX_STYLE_URL;
+
+const MUNICIPIO_BOUNDS = {
+  'La Oliva':           [[-14.05, 28.55], [-13.78, 28.78]],
+  'Puerto del Rosario': [[-14.05, 28.40], [-13.80, 28.56]],
+  'Antigua':            [[-14.15, 28.34], [-13.92, 28.48]],
+  'Betancuria':         [[-14.13, 28.36], [-13.99, 28.46]],
+  'Tuineje':            [[-14.20, 28.18], [-13.90, 28.35]],
+  'Pájara':             [[-14.55, 28.02], [-14.05, 28.30]]
+};
+
+function flyToMunicipios(municipios) {
+  if (!map) return;
+  const opts = {
+    padding: 60,
+    duration: 1500,
+    pitch: currentMode === '3d' ? 60 : 0,
+    bearing: currentMode === '3d' ? -17 : 0
+  };
+  if (!municipios || municipios.size === 0) {
+    map.fitBounds(FUERTEVENTURA_BOUNDS, { ...opts, padding: 40 });
+    return;
+  }
+  let sw = [180, 90], ne = [-180, -90];
+  municipios.forEach(name => {
+    const b = MUNICIPIO_BOUNDS[name];
+    if (!b) return;
+    sw[0] = Math.min(sw[0], b[0][0]);
+    sw[1] = Math.min(sw[1], b[0][1]);
+    ne[0] = Math.max(ne[0], b[1][0]);
+    ne[1] = Math.max(ne[1], b[1][1]);
+  });
+  if (sw[0] < 180) map.fitBounds([sw, ne], opts);
+}
+
+// Colores derivados de la paleta tierra de Fuerteventura Protagonista.
+// Reutiliza los mismos tonos verificados en WCAG AA, pero con las 5
+// categorias reales del Sheet (columna Tipologia) en vez de "sectores".
+const SECTOR_COLORS = {
+  'Servicios': '#534a44',
+  'Proyecto': '#8E6235',
+  'Programa': '#6B7042',
+  'Plan': '#94582F',
+  'Sin clasificar': '#6E6E6E'
+};
+
+function normalize(s) {
+  return (s || '').toString().toLowerCase()
+    .normalize('NFC').normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+
+const LOGO_BASE = 'https://api.fuerteventuraprotagonista.com/rest/uploaded/entities/';
+const STOPWORDS = new Set(['de','del','la','las','el','los','y','en','a','al','con','para','por','un','una']);
+
+function getInitials(name) {
+  const words = (name || '').split(/\s+/).filter(w => w && /[A-Za-zÀ-ÿ]/.test(w[0]) && !STOPWORDS.has(w.toLowerCase()));
+  if (words.length === 0) return '?';
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return (words[0][0] + words[1][0]).toUpperCase();
+}
+
+function buildLogoHTML(p) {
+  const initials = escapeHTML(getInitials(p.name));
+  if (p.logo) {
+    const logoFile = encodeURIComponent(String(p.logo).trim());
+    // Sin onerror inline para permitir Content-Security-Policy estricta sin
+    // 'unsafe-inline'. El fallback se cablea con addEventListener después de
+    // insertar el HTML, vía attachLogoFallbacks().
+    return `<img class="logo-img" src="${LOGO_BASE}${logoFile}.png" loading="lazy" alt="" /><span class="logo-fallback" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;">${initials}</span>`;
+  }
+  return `<span>${initials}</span>`;
+}
+
+// Wire del fallback de logo (img → iniciales) a cada <img.logo-img> dentro de
+// `container`. Reemplaza al antiguo onerror inline, que bloquea CSP estricta.
+function attachLogoFallbacks(container) {
+  if (!container) return;
+  container.querySelectorAll('img.logo-img').forEach(img => {
+    img.addEventListener('error', () => {
+      const parent = img.parentNode;
+      if (parent) parent.classList.add('no-logo');
+      img.style.display = 'none';
+      const fallback = img.nextElementSibling;
+      if (fallback) fallback.style.display = 'flex';
+    }, { once: true });
+  });
+}
+
+function hashId(id) {
+  let h = 0;
+  const s = id || '';
+  for (let i = 0; i < s.length; i++) {
+    h = ((h << 5) - h) + s.charCodeAt(i);
+    h |= 0;
+  }
+  return Math.abs(h);
+}
+
+function buildingFeature(f) {
+  const [lng, lat] = f.geometry.coordinates;
+  const sector = f.properties.sector;
+  const color = SECTOR_COLORS[sector] || '#999';
+  const h = hashId(f.properties.id);
+  const widthM = 26 + (h % 16);
+  const lengthM = 36 + ((h >> 4) % 24);
+  const rotation = (h >> 8) % 90;
+  const height = 45 + ((h >> 12) % 60);
+  const widthDeg = widthM / (111000 * Math.cos(lat * Math.PI / 180));
+  const lengthDeg = lengthM / 111000;
+  const rect = turf.bboxPolygon([
+    lng - widthDeg / 2, lat - lengthDeg / 2,
+    lng + widthDeg / 2, lat + lengthDeg / 2
+  ]);
+  const rotated = turf.transformRotate(rect, rotation, { pivot: [lng, lat] });
+  rotated.properties = {
+    id: f.properties.id,
+    sector,
+    color,
+    height
+  };
+  return rotated;
+}
+
+let GEOJSON = null;
+let map = null;
+let searchQuery = '';
+let currentMode = '2d';
+let zonesData = null;
+const seenMapErrors = new Set();
+
+// === FILTROS DINÁMICOS ===
+// Los filtros se generan a partir de las columnas (props._filters). Mientras FP
+// use geojson estático sin _filters, featureFilters() los deriva de las columnas
+// conocidas. activeFilters: { dimensión: Set(valores) }.
+let activeFilters = {};
+let filterDims = [];
+
+const FILTER_BLOCKLIST = new Set([
+  'ID', 'Nombre', 'Dirección', 'Latitud', 'Longitud',
+  'Teléfonos', 'Emails', 'Web', 'Facebook', 'Instagram', 'Twitter', 'Logo ID'
+]);
+const FILTER_MAX_CARDINALITY = 40;
+// En FP la dimensión que dispara vuelo de cámara es el Municipio.
+const FLYTO_DIM = 'Municipio';
+const FILTER_DIM_ORDER = ['Municipio', 'Tipología', 'Protagonista', 'Isla', 'Provincia'];
+
+function featureFilters(f) {
+  const p = f.properties;
+  if (p._filters && typeof p._filters === 'object') return p._filters;
+  const out = {};
+  // La unica categoria del Sheet (columna Tipologia) vive en p.sector y
+  // alimenta tanto el color de los marcadores como este filtro, pero se
+  // etiqueta "Tipología" para que coincida con la columna real del Sheet.
+  if (p.sector) out['Tipología'] = p.sector;
+  if (p.protagonist) out['Protagonista'] = p.protagonist;
+  if (p.municipality) out['Municipio'] = p.municipality;
+  if (p.province) out['Provincia'] = p.province;
+  if (p.island) out['Isla'] = p.island;
+  return out;
+}
+
+function computeFilterDims() {
+  const byDim = {};
+  GEOJSON.features.forEach(f => {
+    const ff = featureFilters(f);
+    for (const dim in ff) {
+      if (FILTER_BLOCKLIST.has(dim)) continue;
+      const val = ff[dim];
+      if (val === undefined || val === null || val === '') continue;
+      (byDim[dim] = byDim[dim] || new Set()).add(String(val));
+    }
+  });
+  filterDims = Object.keys(byDim)
+    .filter(dim => byDim[dim].size >= 2 && byDim[dim].size <= FILTER_MAX_CARDINALITY)
+    .map(dim => ({ name: dim, values: [...byDim[dim]].sort((a, b) => a.localeCompare(b, 'es')) }));
+  filterDims.sort((a, b) => {
+    const ia = FILTER_DIM_ORDER.indexOf(a.name), ib = FILTER_DIM_ORDER.indexOf(b.name);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.name.localeCompare(b.name, 'es');
+  });
+  filterDims.forEach(d => { if (!activeFilters[d.name]) activeFilters[d.name] = new Set(); });
+}
+
+// Id de la entidad actualmente seleccionada (panel de detalle abierto).
+let selectedEntityId = null;
+
+function setSelectedEntity(id) {
+  selectedEntityId = id || null;
+  if (map && map.getLayer('selected-halo')) {
+    map.setFilter('selected-halo', ['==', ['get', 'id'], selectedEntityId || '__none__']);
+  }
+  document.querySelectorAll('.entity-card.selected').forEach(c => {
+    c.classList.remove('selected');
+    c.removeAttribute('aria-pressed');
+  });
+  if (selectedEntityId) {
+    const card = document.querySelector(`.entity-card[data-id="${CSS.escape(selectedEntityId)}"]`);
+    if (card) {
+      card.classList.add('selected');
+      card.setAttribute('aria-pressed', 'true');
+    }
+  }
+}
+
+// Valida que una geometría tenga coordenadas numéricas finitas dentro de los
+// rangos válidos de lat/lng. Rechaza null/string/Infinity/NaN/fuera de rango.
+function hasValidCoords(f) {
+  const c = f && f.geometry && f.geometry.coordinates;
+  if (!Array.isArray(c) || c.length !== 2) return false;
+  const [lng, lat] = c;
+  if (typeof lng !== 'number' || typeof lat !== 'number') return false;
+  if (!Number.isFinite(lng) || !Number.isFinite(lat)) return false;
+  if (lng < -180 || lng > 180 || lat < -90 || lat > 90) return false;
+  return true;
+}
+
+function showFatalDataError(message) {
+  const list = document.getElementById('entity-list');
+  if (list) list.innerHTML = `<div class="empty">${escapeHTML(message)}</div>`;
+  const count = document.getElementById('results-count');
+  if (count) count.textContent = '!';
+}
+
+async function load() {
+  if (typeof mapboxgl === 'undefined' || typeof turf === 'undefined') {
+    console.error('Mapbox GL JS o Turf no se cargaron desde la CDN.');
+    const list = document.getElementById('entity-list');
+    if (list) list.innerHTML = '<div class="empty">No se pudieron cargar las librerías de mapa (Mapbox/Turf). Revisa tu conexión.</div>';
+    const count = document.getElementById('results-count');
+    if (count) count.textContent = '!';
+    const mapEl = document.getElementById('map');
+    if (mapEl) mapEl.innerHTML = '<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#FAF7F1;color:#534a44;font-weight:600;text-align:center;padding:32px;">No se pudo cargar el mapa.<br><span style="font-weight:400;color:#534a44;font-size:13px;">Revisa la conexión y recarga.</span></div>';
+    return;
+  }
+  let raw;
+  try {
+    const resp = await fetch(`${GEOJSON_URL}?v=${DATA_VERSION}`, { cache: 'no-cache' });
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    raw = await resp.json();
+  } catch (err) {
+    console.error('Error cargando entities.geojson:', err);
+    showFatalDataError('No se pudieron cargar las entidades. Recarga la página o revisa tu conexión.');
+    return;
+  }
+
+  // Validación de estructura GeoJSON básica.
+  if (!raw || raw.type !== 'FeatureCollection' || !Array.isArray(raw.features)) {
+    console.error('entities.geojson no es un FeatureCollection válido');
+    showFatalDataError('Los datos de entidades no tienen el formato esperado.');
+    return;
+  }
+
+  // Filtra features con coordenadas inválidas (null, string, NaN, fuera de rango).
+  // Antes esto rompía la app entera con un canvas en blanco y sin mensaje.
+  const valid = [];
+  let invalidCount = 0;
+  for (const f of raw.features) {
+    if (hasValidCoords(f)) {
+      valid.push(f);
+    } else {
+      invalidCount++;
+      console.warn('Entidad descartada por coordenadas inválidas:', f && f.properties && f.properties.name);
+    }
+  }
+
+  if (valid.length === 0) {
+    showFatalDataError('No hay entidades con ubicación válida para mostrar en el mapa.');
+    return;
+  }
+
+  if (invalidCount > 0) {
+    console.warn(`${invalidCount} entidad(es) sin ubicación válida no se muestran en el mapa.`);
+  }
+
+  GEOJSON = { type: 'FeatureCollection', features: valid };
+
+  GEOJSON.features.forEach(f => {
+    let s = (f.properties.sector || '').trim();
+    f.properties.sector = s || 'Sin clasificar';
+  });
+
+  zonesData = {
+    type: 'FeatureCollection',
+    features: GEOJSON.features.map(f => buildingFeature(f))
+  };
+
+  initSidebar();
+  applyFilter();
+  initMap();
+  openEntityFromUrl();
+}
+
+// Si la URL trae ?entity=<id> y existe en el dataset, abre el panel de
+// detalle con esa entidad. Espera al map.load para volar correctamente.
+function openEntityFromUrl() {
+  const id = new URLSearchParams(window.location.search).get('entity');
+  if (!id) return;
+  const feat = GEOJSON.features.find(f => f.properties.id === id);
+  if (!feat) return;
+  const open = () => { flyToFeature(feat); showDetail(feat, { skipUrl: true }); };
+  if (map && map.loaded()) open(); else if (map) map.once('load', open);
+}
+
+function initSidebar() {
+  computeFilterDims();
+
+  const container = document.getElementById('filter-sections');
+  container.innerHTML = '';
+  filterDims.forEach((dim, di) => {
+    const det = document.createElement('details');
+    det.className = 'sector-filter';
+    if (di < 2) det.open = true;
+    const summary = document.createElement('summary');
+    summary.textContent = 'Filtrar por ' + dim.name.toLowerCase();
+    det.appendChild(summary);
+    const wrap = document.createElement('div');
+    wrap.className = 'sector-pills';
+    wrap.setAttribute('role', 'group');
+    wrap.setAttribute('aria-label', 'Filtrar por ' + dim.name);
+
+    dim.values.forEach(val => {
+      const pill = document.createElement('button');
+      pill.type = 'button';
+      pill.className = 'sector-pill';
+      pill.setAttribute('aria-pressed', 'false');
+      const isSector = dim.name === 'Tipología';
+      pill.style.setProperty('--c', isSector ? (SECTOR_COLORS[val] || '#6E6E6E') : '#534a44');
+      const dot = isSector ? '<span class="dot"></span>' : '';
+      pill.innerHTML = `${dot}<span>${escapeHTML(val)}</span><span class="count"></span>`;
+      pill.dataset.dim = dim.name;
+      pill.dataset.value = val;
+      pill.addEventListener('click', () => {
+        const set = activeFilters[dim.name];
+        const selected = !set.has(val);
+        if (selected) set.add(val); else set.delete(val);
+        pill.classList.toggle('selected', selected);
+        pill.setAttribute('aria-pressed', String(selected));
+        applyFilter();
+        syncFilterStateToUrl();
+        if (dim.name === FLYTO_DIM) flyToMunicipios(activeFilters[FLYTO_DIM]);
+      });
+      wrap.appendChild(pill);
+    });
+    det.appendChild(wrap);
+    container.appendChild(det);
+  });
+
+  document.getElementById('search').addEventListener('input', (e) => {
+    searchQuery = normalize(e.target.value);
+    applyFilter();
+    syncFilterStateToUrl();
+  });
+
+  const dragHandle = document.getElementById('drag-handle');
+  if (dragHandle) {
+    dragHandle.addEventListener('click', () => {
+      const expanded = document.getElementById('sidebar').classList.toggle('expanded');
+      dragHandle.setAttribute('aria-expanded', String(expanded));
+    });
+  }
+
+  document.getElementById('btn-2d').addEventListener('click', () => setView('2d'));
+  document.getElementById('btn-3d').addEventListener('click', () => setView('3d'));
+  document.getElementById('btn-fit').addEventListener('click', () => {
+    const btn2 = document.getElementById('btn-2d');
+    const btn3 = document.getElementById('btn-3d');
+    btn2.classList.add('active'); btn2.setAttribute('aria-pressed', 'true');
+    btn3.classList.remove('active'); btn3.setAttribute('aria-pressed', 'false');
+    currentMode = '2d';
+    setTowersVisible(false);
+    if (map) map.fitBounds(FUERTEVENTURA_BOUNDS, { padding: 40, pitch: 0, bearing: 0, duration: 1200 });
+  });
+
+  const btnClear = document.getElementById('btn-clear-filters');
+  if (btnClear) btnClear.addEventListener('click', clearAllFilters);
+
+  // Restaura el estado de filtros desde la URL.
+  const initial = getFilterStateFromUrl();
+  for (const dim in initial.dims) {
+    const set = activeFilters[dim];
+    if (!set) continue;
+    const known = (filterDims.find(d => d.name === dim) || {}).values || [];
+    initial.dims[dim].forEach(v => { if (known.includes(v)) set.add(v); });
+  }
+  searchQuery = normalize(initial.q);
+  document.querySelectorAll('.sector-pill[data-dim]').forEach(p => {
+    const set = activeFilters[p.dataset.dim];
+    if (set && set.has(p.dataset.value)) {
+      p.classList.add('selected');
+      p.setAttribute('aria-pressed', 'true');
+    }
+  });
+  if (initial.q) {
+    const search = document.getElementById('search');
+    if (search) search.value = initial.q;
+  }
+}
+
+// Estado de filtros en URL: cada dimensión con su nombre como clave.
+function getFilterStateFromUrl() {
+  const p = new URLSearchParams(window.location.search);
+  const split = s => s ? s.split(',').map(x => x.trim()).filter(Boolean) : [];
+  const dims = {};
+  for (const [key, value] of p.entries()) {
+    if (key === 'q' || key === 'entity') continue;
+    dims[key] = split(value);
+  }
+  return { dims, q: p.get('q') || ''
+  };
+}
+
+function syncFilterStateToUrl() {
+  const url = new URL(window.location.href);
+  [...url.searchParams.keys()].forEach(k => {
+    if (k !== 'q' && k !== 'entity') url.searchParams.delete(k);
+  });
+  for (const dim in activeFilters) {
+    const vals = [...activeFilters[dim]];
+    if (vals.length) url.searchParams.set(dim, vals.join(','));
+  }
+  if (searchQuery) url.searchParams.set('q', searchQuery);
+  else url.searchParams.delete('q');
+  history.replaceState(null, '', url.toString());
+}
+
+function hasActiveFilters() {
+  if (searchQuery.length > 0) return true;
+  return Object.values(activeFilters).some(set => set.size > 0);
+}
+
+function clearAllFilters() {
+  for (const dim in activeFilters) activeFilters[dim].clear();
+  searchQuery = '';
+  document.querySelectorAll('.sector-pill.selected').forEach(p => {
+    p.classList.remove('selected');
+    p.setAttribute('aria-pressed', 'false');
+  });
+  const search = document.getElementById('search');
+  if (search) search.value = '';
+  applyFilter();
+  syncFilterStateToUrl();
+}
+
+function matchesSearch(props) {
+  if (!searchQuery) return true;
+  const fields = [
+    props.name, props.municipality, props.province, props.address,
+    props.sector, props.protagonist
+  ].map(normalize);
+  return fields.some(f => f.includes(searchQuery));
+}
+
+function passesFilters(f, ignoreDim) {
+  const ff = featureFilters(f);
+  for (const dim in activeFilters) {
+    if (dim === ignoreDim) continue;
+    const set = activeFilters[dim];
+    if (set.size === 0) continue;
+    if (!set.has(String(ff[dim] == null ? '' : ff[dim]))) return false;
+  }
+  return true;
+}
+
+function getFilteredFeatures() {
+  return GEOJSON.features.filter(f => passesFilters(f, null) && matchesSearch(f.properties));
+}
+
+// Conteos facetados: cada pill cuenta excluyendo el filtro de su propia dimensión.
+function updateFacetedCounts() {
+  if (!GEOJSON) return;
+  const counts = {};
+  filterDims.forEach(d => { counts[d.name] = {}; });
+  GEOJSON.features.forEach(f => {
+    if (!matchesSearch(f.properties)) return;
+    const ff = featureFilters(f);
+    filterDims.forEach(d => {
+      if (!passesFilters(f, d.name)) return;
+      const v = String(ff[d.name] == null ? '' : ff[d.name]);
+      if (v) counts[d.name][v] = (counts[d.name][v] || 0) + 1;
+    });
+  });
+  document.querySelectorAll('.sector-pill[data-dim]').forEach(p => {
+    const n = (counts[p.dataset.dim] || {})[p.dataset.value] || 0;
+    const countEl = p.querySelector('.count');
+    if (countEl) countEl.textContent = n;
+    p.classList.toggle('empty', n === 0);
+  });
+}
+
+function applyFilter() {
+  const filtered = getFilteredFeatures();
+  if (map && map.getSource('entities')) {
+    map.getSource('entities').setData({
+      type: 'FeatureCollection',
+      features: filtered
+    });
+    if (map.getSource('zones')) {
+      const filteredIds = new Set(filtered.map(f => f.properties.id));
+      map.getSource('zones').setData({
+        type: 'FeatureCollection',
+        features: zonesData.features.filter(z => filteredIds.has(z.properties.id))
+      });
+    }
+  }
+  document.getElementById('results-count').textContent = filtered.length;
+  renderEntityList(filtered);
+  updateFacetedCounts();
+  const btnClear = document.getElementById('btn-clear-filters');
+  if (btnClear) btnClear.hidden = !hasActiveFilters();
+}
+
+function renderEntityList(features) {
+  const list = document.getElementById('entity-list');
+  if (features.length === 0) {
+    list.innerHTML = '<div class="empty">No se encontraron entidades con esos filtros.</div>';
+    return;
+  }
+  const frag = document.createDocumentFragment();
+  const sorted = features.slice().sort((a, b) => a.properties.name.localeCompare(b.properties.name, 'es'));
+  sorted.slice(0, 120).forEach(f => {
+    const p = f.properties;
+    const color = SECTOR_COLORS[p.sector] || '#999';
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'entity-card' + (p.id === selectedEntityId ? ' selected' : '');
+    card.dataset.id = p.id;
+    if (p.id === selectedEntityId) card.setAttribute('aria-pressed', 'true');
+    card.setAttribute('aria-label', `${p.name}, ${p.sector}`);
+    card.style.setProperty('--c', color);
+    const loc = [p.municipality, p.province].filter(Boolean).join(', ') || p.island || p.sector;
+    card.innerHTML = `
+      <div class="sector-bar"></div>
+      <div class="card-logo">${buildLogoHTML(p)}</div>
+      <div class="card-body">
+        <div class="name">${escapeHTML(p.name)}</div>
+        <div class="location">${escapeHTML(loc)}</div>
+        ${(p.municipality || p.island) ? `<div class="sector-label">${escapeHTML(p.sector)}</div>` : ''}
+      </div>
+    `;
+    attachLogoFallbacks(card);
+    card.addEventListener('click', () => {
+      flyToFeature(f);
+      showDetail(f);
+    });
+    frag.appendChild(card);
+  });
+  if (sorted.length > 120) {
+    const note = document.createElement('div');
+    note.className = 'empty';
+    note.textContent = `+${sorted.length - 120} entidades más · afina la búsqueda`;
+    frag.appendChild(note);
+  }
+  list.innerHTML = '';
+  list.appendChild(frag);
+}
+
+function flyToFeature(f) {
+  if (!map) return;
+  const coords = f.geometry.coordinates;
+  const pitchKeep = currentMode === '3d' ? 65 : 0;
+  const bearingKeep = currentMode === '3d' ? -17 : 0;
+  map.flyTo({ center: coords, zoom: 16, pitch: pitchKeep, bearing: bearingKeep, duration: 1500 });
+}
+
+// Normaliza errores de Mapbox para logs y dedup. Redacta el access_token de
+// las URLs y reduce tiles a su template {z}/{x}/{y} para no spamear la consola.
+function formatMapError(err, event) {
+  const parts = [];
+  const normalizeValue = (key, value) => {
+    const text = String(value);
+    if (key !== 'url') return text;
+    try {
+      const url = new URL(text);
+      const path = url.pathname
+        .replace(/\/\d+\/\d+\/\d+\.vector\.pbf$/, '/{z}/{x}/{y}.vector.pbf')
+        .replace(/\/\d+\/\d+\/\d+\.glb$/, '/{z}/{x}/{y}.glb');
+      return `${url.origin}${path}`;
+    } catch (_) {
+      return text.replace(/access_token=[^&\s]+/g, 'access_token=<redacted>');
+    }
+  };
+  const collect = (obj, keys) => {
+    if (!obj) return;
+    keys.forEach(key => {
+      const value = obj[key];
+      if (value !== undefined && value !== null && value !== '') {
+        parts.push(`${key}=${normalizeValue(key, value)}`);
+      }
+    });
+  };
+  collect(err, ['message', 'name', 'status', 'statusCode', 'url', 'resource', 'sourceId']);
+  collect(event, ['sourceId', 'sourceLayer', 'tileID']);
+  return parts.join(' ') || String(err || event || 'unknown');
+}
+
+function escapeHTML(s) {
+  return (s || '').toString()
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// Lista de parámetros de tracking que strippeamos al construir enlaces.
+// fbclid/gclid/mc_*: Facebook/Google Ads/Mailchimp. utm_*: UTM. ref/_ga: otros.
+const TRACKING_PARAMS = /^(fbclid|gclid|mc_(?:eid|cid)|utm_[a-z]+|ref|_ga|_gl|igshid|yclid|msclkid)$/i;
+
+function cleanUrl(u) {
+  if (!u) return '';
+  const s = String(u).trim();
+  if (!s || s.toLowerCase() === 'null') return '';
+  const m = s.match(/https?:\/\/[^\s"'<>,)]+/i);
+  if (!m) return '';
+  let raw = m[0].replace(/[)"',.;:!]+$/, '');
+  try {
+    const parsed = new URL(raw);
+    const keep = [];
+    parsed.searchParams.forEach((v, k) => { if (!TRACKING_PARAMS.test(k)) keep.push([k, v]); });
+    parsed.search = '';
+    keep.forEach(([k, v]) => parsed.searchParams.append(k, v));
+    raw = parsed.toString().replace(/\?$/, '');
+  } catch (_) { /* URL inválida — devolver tal cual */ }
+  return raw;
+}
+
+function cleanPhone(s) {
+  if (!s) return '';
+  let v = String(s).trim().replace(/^(tel|telefono|tlf|telef)[:.\s]+/i, '');
+  v = v.replace(/[^\d+\-()\s]/g, '');
+  v = v.replace(/\(\s*\)/g, '');
+  v = v.replace(/\s+/g, ' ').trim();
+  const digits = v.replace(/\D/g, '');
+  return digits.length >= 7 ? v : '';
+}
+
+function cleanEmail(s) {
+  if (!s) return '';
+  const v = String(s).trim().replace(/^mailto:/i, '').toLowerCase();
+  return /^[\w.+-]+@[\w.-]+\.\w+$/.test(v) ? v : '';
+}
+
+function buildLinkChip(href, label) {
+  const clean = cleanUrl(href);
+  if (!clean) return '';
+  return `<a class="detail-link-chip" href="${escapeHTML(clean)}" target="_blank" rel="noopener">${label}</a>`;
+}
+
+function renderDetail(feature) {
+  const p = feature.properties;
+  const color = SECTOR_COLORS[p.sector] || '#999';
+  const links = [
+    buildLinkChip(p.url, 'Web'),
+    buildLinkChip(p.facebook, 'Facebook'),
+    buildLinkChip(p.instagram, 'Instagram'),
+    buildLinkChip(p.twitter, 'Twitter')
+  ].filter(Boolean).join('');
+
+  // Address may come as a string or as a list — normalize
+  let phones = p.phones || [];
+  let emails = p.emails || [];
+  if (typeof phones === 'string') { try { phones = JSON.parse(phones); } catch(e) { phones = phones ? [phones] : []; } }
+  if (typeof emails === 'string') { try { emails = JSON.parse(emails); } catch(e) { emails = emails ? [emails] : []; } }
+
+  const locationParts = [p.municipality, p.province].filter(Boolean).join(', ');
+  const fullAddress = p.address || locationParts || '';
+
+  const addressBlock = fullAddress
+    ? `<div class="detail-section"><div class="detail-section-label">Dirección</div><div class="detail-section-value">${escapeHTML(fullAddress)}</div></div>`
+    : (locationParts ? `<div class="detail-section"><div class="detail-section-label">Ubicación</div><div class="detail-section-value">${escapeHTML(locationParts)}</div></div>` : '');
+
+  const cleanPhones = phones.map(cleanPhone).filter(Boolean);
+  const cleanEmails = emails.map(cleanEmail).filter(Boolean);
+  let phonesBlock = '';
+  if (cleanPhones.length) {
+    phonesBlock = `<div class="detail-section"><div class="detail-section-label">Teléfono</div><div class="detail-section-value">${cleanPhones.map(x => `<a href="tel:${escapeHTML(x.replace(/\s/g,''))}" style="color:#534a44;text-decoration:none;font-weight:600;">${escapeHTML(x)}</a>`).join('<br>')}</div></div>`;
+  }
+  let emailsBlock = '';
+  if (cleanEmails.length) {
+    emailsBlock = `<div class="detail-section"><div class="detail-section-label">Email</div><div class="detail-section-value">${cleanEmails.map(x => `<a href="mailto:${escapeHTML(x)}" style="color:#8E6235;text-decoration:none;font-weight:600;">${escapeHTML(x)}</a>`).join('<br>')}</div></div>`;
+  }
+
+  return `
+    <button type="button" class="back-button" id="back-btn"><span class="arrow">←</span> Volver al listado</button>
+    <div class="detail-content">
+      <div class="detail-logo-block">
+        <div class="detail-logo" style="--c:${color}">${buildLogoHTML(p)}</div>
+        <h2 class="detail-name">${escapeHTML(p.name)}</h2>
+      </div>
+      <div class="detail-pill" style="background:${color}">${escapeHTML(p.sector)}</div>
+      ${p.protagonist ? `<div class="detail-section"><div class="detail-section-label">Protagonista</div><div class="detail-section-value">${escapeHTML(p.protagonist)}</div></div>` : ''}
+      ${addressBlock}
+      ${phonesBlock}
+      ${emailsBlock}
+      ${links ? `<div class="detail-section"><div class="detail-section-label">Enlaces</div><div class="detail-links-row">${links}</div></div>` : ''}
+      <div class="detail-actions">
+        <button type="button" class="detail-action primary" id="center-btn">Centrar en el mapa</button>
+        <a class="detail-action" id="gmaps-btn" href="https://www.google.com/maps/dir/?api=1&destination=${feature.geometry.coordinates[1]},${feature.geometry.coordinates[0]}" target="_blank" rel="noopener">Cómo llegar (Google Maps)</a>
+      </div>
+    </div>
+  `;
+}
+
+function showDetail(feature, opts = {}) {
+  const viewList = document.getElementById('view-list');
+  const viewDetail = document.getElementById('view-detail');
+  viewDetail.innerHTML = renderDetail(feature);
+  attachLogoFallbacks(viewDetail);
+  viewDetail.setAttribute('tabindex', '-1');
+  viewList.classList.add('hidden');
+  viewDetail.classList.add('active');
+  viewDetail.scrollTop = 0;
+  if (window.innerWidth <= 768) {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.add('expanded');
+    const dh = document.getElementById('drag-handle');
+    if (dh) dh.setAttribute('aria-expanded', 'true');
+  }
+  const backBtn = document.getElementById('back-btn');
+  backBtn.addEventListener('click', hideDetail);
+  document.getElementById('center-btn').addEventListener('click', () => flyToFeature(feature));
+  setTimeout(() => backBtn.focus(), 0);
+  // Marca la entidad como seleccionada (halo en mapa + card resaltada).
+  setSelectedEntity(feature.properties.id);
+  // Refleja la entidad en la URL para que sea compartible (?entity=<id>).
+  if (!opts.skipUrl) {
+    const id = feature.properties.id;
+    if (id) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('entity', id);
+      history.replaceState(null, '', url.toString());
+    }
+  }
+}
+
+function hideDetail() {
+  const viewList = document.getElementById('view-list');
+  const viewDetail = document.getElementById('view-detail');
+  viewList.classList.remove('hidden');
+  viewDetail.classList.remove('active');
+  viewDetail.innerHTML = '';
+  setSelectedEntity(null);
+  // Devuelve el foco al campo de búsqueda como ancla razonable de la lista.
+  const search = document.getElementById('search');
+  if (search) setTimeout(() => search.focus(), 0);
+  // Limpia el param de la URL al volver a la lista.
+  const url = new URL(window.location.href);
+  if (url.searchParams.has('entity')) {
+    url.searchParams.delete('entity');
+    history.replaceState(null, '', url.toString());
+  }
+}
+
+function setView(mode) {
+  currentMode = mode;
+  const btn2 = document.getElementById('btn-2d');
+  const btn3 = document.getElementById('btn-3d');
+  btn2.classList.toggle('active', mode === '2d');
+  btn3.classList.toggle('active', mode === '3d');
+  btn2.setAttribute('aria-pressed', String(mode === '2d'));
+  btn3.setAttribute('aria-pressed', String(mode === '3d'));
+  if (!map) return;
+  if (mode === '3d') {
+    setTowersVisible(true);
+    map.easeTo({ pitch: 65, bearing: -17, duration: 1200 });
+  } else {
+    setTowersVisible(false);
+    map.easeTo({ pitch: 0, bearing: 0, duration: 1000 });
+  }
+}
+
+function setTowersVisible(visible) {
+  if (!map) return;
+  const vis = visible ? 'visible' : 'none';
+  if (map.getLayer('zones')) map.setLayoutProperty('zones', 'visibility', vis);
+}
+
+function initMap() {
+  map = new mapboxgl.Map({
+    container: 'map',
+    style: MAP_STYLE,
+    center: [-14.05, 28.4],
+    zoom: 9.2,
+    maxZoom: 18,
+    minZoom: 7,
+    // Restringe la navegación a Fuerteventura + margen. Evita que el usuario
+    // se pierda en el océano paneando lejos de la isla.
+    maxBounds: [[-15.0, 27.7], [-13.3, 29.0]]
+  });
+
+  map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), 'top-right');
+  map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
+
+  map.on('error', (e) => {
+    const err = e && e.error || e;
+    const key = formatMapError(err, e);
+    if (seenMapErrors.has(key)) return;
+    seenMapErrors.add(key);
+    console.warn(`Mapbox warning: ${key}`);
+  });
+
+  map.on('load', () => {
+    if (!USE_LOCAL_BASEMAP) {
+      map.setFog({
+        'range': [0.5, 12],
+        'horizon-blend': 0.2,
+        'color': '#E8EEF2',
+        'high-color': '#534a44',
+        'space-color': '#0a0e1a',
+        'star-intensity': 0.15
+      });
+
+      map.addSource('mapbox-dem', {
+        type: 'raster-dem',
+        url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+        tileSize: 512,
+        maxzoom: 14
+      });
+      map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
+    }
+
+    try {
+      map.setLight({
+        'anchor': 'viewport',
+        'color': '#FFFFFF',
+        'intensity': 0.5,
+        'position': [1.15, 90, 60]
+      });
+    } catch (e) { /* light may be locked by style */ }
+
+    map.addSource('entities', {
+      type: 'geojson',
+      data: GEOJSON,
+      cluster: true,
+      clusterRadius: 40,
+      clusterMaxZoom: 13
+    });
+
+    map.addSource('zones', { type: 'geojson', data: zonesData });
+
+    map.addLayer({
+      id: 'zones',
+      type: 'fill-extrusion',
+      source: 'zones',
+      layout: { visibility: 'none' },
+      paint: {
+        'fill-extrusion-color': ['get', 'color'],
+        'fill-extrusion-height': ['get', 'height'],
+        'fill-extrusion-base': 0,
+        'fill-extrusion-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0, 11, 0.55],
+        'fill-extrusion-vertical-gradient': true
+      }
+    });
+
+    map.addLayer({
+      id: 'clusters-glow',
+      type: 'circle',
+      source: 'entities',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': '#534a44',
+        'circle-radius': ['step', ['get', 'point_count'], 30, 5, 36, 15, 44, 30, 56],
+        'circle-opacity': 0.18,
+        'circle-blur': 0.6
+      }
+    });
+
+    map.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'entities',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': '#534a44',
+        'circle-radius': ['step', ['get', 'point_count'], 18, 5, 22, 15, 28, 30, 36],
+        'circle-stroke-width': 3,
+        'circle-stroke-color': '#FFFFFF'
+      }
+    });
+
+    map.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'entities',
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-font': ['Montserrat Bold', 'Open Sans Bold'],
+        'text-size': 13
+      },
+      paint: { 'text-color': '#FFFFFF' }
+    });
+
+    const colorExpr = ['match', ['get', 'sector']];
+    Object.entries(SECTOR_COLORS).forEach(([s, c]) => colorExpr.push(s, c));
+    colorExpr.push('#999999');
+
+    // Halo de la entidad seleccionada — visible cuando setSelectedEntity asigna un id.
+    map.addLayer({
+      id: 'selected-halo',
+      type: 'circle',
+      source: 'entities',
+      filter: ['==', ['get', 'id'], '__none__'],
+      paint: {
+        'circle-color': 'rgba(83, 74, 68, 0.18)',
+        'circle-radius': 22,
+        'circle-stroke-width': 2,
+        'circle-stroke-color': '#534a44',
+        'circle-stroke-opacity': 0.7
+      }
+    });
+
+    map.addLayer({
+      id: 'unclustered-point',
+      type: 'circle',
+      source: 'entities',
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+        'circle-color': colorExpr,
+        'circle-radius': 8,
+        'circle-stroke-width': 2,
+        'circle-stroke-color': '#FFFFFF'
+      }
+    });
+
+    map.on('click', 'clusters', (e) => {
+      const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+      if (!features.length) return;
+      const feat = features[0];
+      // Mapbox GL JS v3 sigue siendo callback-based aquí: el método devuelve
+      // `this` (la source) para chaining y entrega el zoom asíncronamente por
+      // el callback. Hacer await sobre el retorno daba GeoJSONSource ⇒ easeTo
+      // recibía zoom no finito y el cluster nunca expandía.
+      map.getSource('entities').getClusterExpansionZoom(feat.properties.cluster_id, (err, zoom) => {
+        if (err) { console.warn('Cluster expansion failed:', err); return; }
+        map.easeTo({ center: feat.geometry.coordinates, zoom });
+      });
+    });
+
+    map.on('click', 'unclustered-point', (e) => {
+      const clicked = e.features[0];
+      const full = GEOJSON.features.find(f => f.properties.id === clicked.properties.id) || clicked;
+      flyToFeature(full);
+      showDetail(full);
+    });
+
+    ['clusters', 'unclustered-point'].forEach(id => {
+      map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });
+    });
+
+    applyFilter();
+    // Si la URL trajo municipios filtrados, vuela a ellos al cargar el mapa.
+    if (activeFilters[FLYTO_DIM] && activeFilters[FLYTO_DIM].size > 0) flyToMunicipios(activeFilters[FLYTO_DIM]);
+  });
+}
+
+load();
+</script>
 </body>
 </html>

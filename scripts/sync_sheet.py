@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""Regenera empresas.geojson a partir del Google Sheet YA MIGRADO (con
+"""Regenera entities.geojson a partir del Google Sheet YA MIGRADO (con
 Latitud/Longitud y Municipio normalizado), que a su vez se genera cada
 noche por el Apps Script "Fuerteventura Protagonista" a partir de las
 respuestas del formulario.
 
 Ese Sheet es de solo lectura para cualquiera con el enlace, así que no
 hace falta ninguna credencial: se descarga como CSV público.
+
+Las propiedades de salida usan los nombres que espera index.html
+(name, sector, municipality, province, island, address, phones, emails,
+url) — "sector" es la columna Tipología del Sheet.
 
 Uso local:
     export SHEET_ID=1m1UVzUPzZdOBWmSFShpe8835YpWmHdWXnVtW7531tUY
@@ -16,7 +20,6 @@ import csv
 import io
 import json
 import os
-import re
 import sys
 
 import requests
@@ -27,7 +30,7 @@ import requests
 COL = {
     "id": 0,
     "nombre": 1,
-    "categoria": 2,     # Tipología
+    "tipologia": 2,
     "municipio": 3,
     "provincia": 4,
     "isla": 5,
@@ -45,7 +48,7 @@ COL = {
 # pueda incluir en el futuro alguna entidad con sede en otra isla.
 FUERTEVENTURA_BOUNDS = {"lat": (27.9, 28.9), "lng": (-14.75, -13.6)}
 
-OUT_PATH = os.path.join(os.path.dirname(__file__), "..", "empresas.geojson")
+OUT_PATH = os.path.join(os.path.dirname(__file__), "..", "entities.geojson")
 
 
 def cell(row, name):
@@ -107,17 +110,20 @@ def rows_to_features(rows):
             continue
         seen_ids.add(entity_id)
 
+        telefono = cell(row, "telefono")
+        email = cell(row, "email")
+
         props = {
             "id": entity_id,
-            "nombre": nombre,
-            "categoria": cell(row, "categoria") or "Sin clasificar",
-            "municipio": cell(row, "municipio"),
-            "direccion": cell(row, "direccion"),
-            "telefono": cell(row, "telefono"),
-            "email": cell(row, "email"),
-            "web": cell(row, "web"),
-            "descripcion": cell(row, "descripcion"),
-            "periodo": cell(row, "periodo"),
+            "name": nombre,
+            "sector": cell(row, "tipologia"),
+            "municipality": cell(row, "municipio"),
+            "province": cell(row, "provincia"),
+            "island": cell(row, "isla"),
+            "address": cell(row, "direccion"),
+            "phones": [telefono] if telefono else [],
+            "emails": [email] if email else [],
+            "url": cell(row, "web"),
         }
         features.append({
             "type": "Feature",
