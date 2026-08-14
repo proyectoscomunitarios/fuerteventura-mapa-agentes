@@ -77,10 +77,14 @@ def fetch_csv_rows(sheet_id, gid):
     url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv&gid={gid}"
     resp = requests.get(url, timeout=30)
     resp.raise_for_status()
-    if resp.text.lstrip().startswith("<"):
+    # Google no manda charset en el Content-Type (text/csv a secas), asi que
+    # requests cae a ISO-8859-1 por defecto y destroza los acentos/enies del
+    # UTF-8 real. Decodificar los bytes crudos explicitamente como utf-8.
+    text = resp.content.decode("utf-8")
+    if text.lstrip().startswith("<"):
         print("::error::La respuesta no es un CSV (¿el Sheet dejó de ser público?).")
         sys.exit(1)
-    reader = csv.reader(io.StringIO(resp.text))
+    reader = csv.reader(io.StringIO(text))
     rows = list(reader)
     return rows[0], rows[1:]
 
