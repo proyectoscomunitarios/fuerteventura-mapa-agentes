@@ -317,32 +317,6 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "facfe1cd-b348-4d30-a3f5-71ce218a3a2f",
-        "name": "Asociación de Vecinos Buenos Amigos Casillas del Ángel",
-        "sector": "Servicios",
-        "municipality": "Puerto del Rosario",
-        "province": "Las Palmas",
-        "island": "Fuerteventura",
-        "address": "Calle Casillas del Ángel, 92; 35611, Puerto del Rosario, Las Palmas",
-        "phones": [
-          "669 091 001"
-        ],
-        "emails": [
-          "aavvbuenosamigos@gmail.com"
-        ],
-        "url": ""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -13.9751688,
-          28.4980974
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "id": "4edcb180-d12f-4005-8e3d-9e30dab5b850",
         "name": "Asociación Social Proyecto Ikual",
         "sector": "Proyecto",
@@ -1835,34 +1809,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -14.662797,
-          27.9453896
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "46496f9e-2822-466b-9992-a4347d5b120d",
-        "name": "Asociación Socio Cultural Montaña del Cardón",
-        "sector": "Servicios",
-        "municipality": "Pájara",
-        "province": "Las Palmas",
-        "island": "Fuerteventura",
-        "address": "Calle Vicente Soto, 8; 35628, Pájara, Las Palmas",
-        "phones": [
-          "699 291 896"
-        ],
-        "emails": [
-          "gonzalezmoralesj@gmail.com"
-        ],
-        "url": ""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -14.1081189,
-          28.3508903
+          -13.96585104,
+          28.49175228
         ]
       }
     },
