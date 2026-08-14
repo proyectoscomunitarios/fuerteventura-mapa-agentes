@@ -1,0 +1,50 @@
+name: Sync Sheet → empresas.geojson
+
+# Descarga el CSV público del Google Sheet de respuestas del formulario,
+# geolocaliza cada dirección (Mapbox Geocoding API, con cache) y regenera
+# empresas.geojson. Si hay cambios respecto a lo que hay en git, los
+# commitea. El Sheet es de solo lectura por enlace, así que no hace falta
+# cuenta de servicio de Google: solo un token secreto de Mapbox.
+
+on:
+  schedule:
+    - cron: '0 * * * *' # cada hora en punto. Bajar a '*/15 * * * *' si hace falta más reactivo.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: pip install --quiet -r scripts/requirements.txt
+
+      - name: Generar empresas.geojson desde el Sheet
+        env:
+          # ID y gid del Sheet (de la URL: /d/<SHEET_ID>/edit?gid=<SHEET_GID>).
+          # No son sensibles: viven en Settings → Secrets and variables →
+          # Actions → Variables.
+          SHEET_ID: ${{ vars.SHEET_ID }}
+          SHEET_GID: ${{ vars.SHEET_GID }}
+          # Token SECRETO de Mapbox (sk.xxx) con scope únicamente
+          # "Geocoding: Read". Nunca el token público del mapa (ese va en
+          # mapa.html y solo debe usarse desde el navegador). Se añade en
+          # Settings → Secrets and variables → Actions → Secrets.
+          MAPBOX_GEOCODING_TOKEN: ${{ secrets.MAPBOX_GEOCODING_TOKEN }}
+        run: python3 scripts/sync_sheet.py
+
+      - name: Commitear si hay cambios
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add empresas.geojson scripts/geocode-cache.json
+          git diff --cached --quiet && echo "Sin cambios" || git commit -m "Sync: actualizar empresas.geojson desde el Sheet ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
+          git push

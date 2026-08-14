@@ -1,0 +1,6 @@
+.claude/
+service-account.json
+*.env
+.DS_Store
+__pycache__/
+*.pyc

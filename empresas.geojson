@@ -1,0 +1,95 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "_comment": "DATOS DE DEMOSTRACIÓN. Este archivo lo regenera scripts/sync_sheet.py a partir del Google Sheet oficial. No lo edites a mano en producción: cualquier cambio manual se sobreescribirá en el siguiente sync.",
+    "generated_at": "demo",
+    "source": "demo"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "demo-1",
+        "nombre": "Artesanía Majorera Corralejo",
+        "categoria": "Artesanía",
+        "municipio": "La Oliva",
+        "direccion": "Av. Marítima 12, Corralejo",
+        "telefono": "+34 928 000 001",
+        "email": "info@ejemplo-demo.com",
+        "web": "https://ejemplo-demo.com",
+        "instagram": "",
+        "facebook": "",
+        "descripcion": "Ejemplo de ficha de empresa. Sustituir con datos reales desde el Sheet."
+      },
+      "geometry": { "type": "Point", "coordinates": [-13.8657, 28.7302] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "demo-2",
+        "nombre": "Restaurante El Muelle",
+        "categoria": "Restauración",
+        "municipio": "Puerto del Rosario",
+        "direccion": "Calle León y Castillo 45, Puerto del Rosario",
+        "telefono": "+34 928 000 002",
+        "email": "info@ejemplo-demo.com",
+        "web": "",
+        "instagram": "https://instagram.com/ejemplo-demo",
+        "facebook": "",
+        "descripcion": "Ejemplo de ficha de empresa. Sustituir con datos reales desde el Sheet."
+      },
+      "geometry": { "type": "Point", "coordinates": [-13.8627, 28.5004] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "demo-3",
+        "nombre": "Escuela de Surf Costa Calma",
+        "categoria": "Turismo activo",
+        "municipio": "Pájara",
+        "direccion": "Playa de Costa Calma",
+        "telefono": "+34 928 000 003",
+        "email": "info@ejemplo-demo.com",
+        "web": "https://ejemplo-demo.com",
+        "instagram": "",
+        "facebook": "",
+        "descripcion": "Ejemplo de ficha de empresa. Sustituir con datos reales desde el Sheet."
+      },
+      "geometry": { "type": "Point", "coordinates": [-14.2333, 28.1667] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "demo-4",
+        "nombre": "Queso Majorero Betancuria",
+        "categoria": "Agricultura y ganadería",
+        "municipio": "Betancuria",
+        "direccion": "Casco histórico, Betancuria",
+        "telefono": "+34 928 000 004",
+        "email": "info@ejemplo-demo.com",
+        "web": "",
+        "instagram": "",
+        "facebook": "https://facebook.com/ejemplo-demo",
+        "descripcion": "Ejemplo de ficha de empresa. Sustituir con datos reales desde el Sheet."
+      },
+      "geometry": { "type": "Point", "coordinates": [-14.0570, 28.4275] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "demo-5",
+        "nombre": "Cooperativa Pesquera Gran Tarajal",
+        "categoria": "Pesca",
+        "municipio": "Tuineje",
+        "direccion": "Puerto de Gran Tarajal",
+        "telefono": "+34 928 000 005",
+        "email": "info@ejemplo-demo.com",
+        "web": "",
+        "instagram": "",
+        "facebook": "",
+        "descripcion": "Ejemplo de ficha de empresa. Sustituir con datos reales desde el Sheet."
+      },
+      "geometry": { "type": "Point", "coordinates": [-14.0186, 28.2145] }
+    }
+  ]
+}

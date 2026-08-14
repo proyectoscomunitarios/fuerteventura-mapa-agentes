@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mapa de Agentes — Fuerteventura Protagonista</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.21.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.21.0/mapbox-gl.js"></script>
+<style>
+  /* ---- Paleta Fuerteventura Protagonista. Ajustar a los hex de marca exactos cuando se tengan. ---- */
+  :root{
+    --fp-brown-dark:#4a3f38;
+    --fp-brown:#6b5c50;
+    --fp-cream:#ece7e0;
+    --fp-cream-soft:#f7f4ef;
+    --fp-accent:#b3763f;
+    --fp-line:#e0dad0;
+    --fp-text:#3a332e;
+    --fp-text-soft:#6f665d;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { height:100%; font-family:'Montserrat', sans-serif; color:var(--fp-text); -webkit-font-smoothing:antialiased; }
+  #app { display:flex; height:100vh; height:100dvh; }
+
+  /* ---------- Sidebar ---------- */
+  #sidebar { width:380px; background:var(--fp-cream-soft); border-right:1px solid var(--fp-line); flex-shrink:0; display:flex; flex-direction:column; overflow:hidden; z-index:2; }
+  .sidebar-header { padding:20px 22px 12px; background:var(--fp-brown-dark); color:#fff; }
+  .sidebar-header h1 { font-family:'Quicksand',sans-serif; font-size:17px; font-weight:700; letter-spacing:-.2px; }
+  .sidebar-header p { font-size:11.5px; color:#d8cfc4; margin-top:3px; }
+  .sidebar-search { padding:14px 22px 10px; border-bottom:1px solid var(--fp-line); }
+  .search-input { width:100%; padding:10px 14px 10px 34px; border:1px solid var(--fp-line); border-radius:8px; font-family:inherit; font-size:13px;
+    background:#fff url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23999' stroke-width='2'%3E%3Ccircle cx='7' cy='7' r='5'/%3E%3Cpath d='M11 11l3 3'/%3E%3C/svg%3E") no-repeat 10px center;
+    background-size:15px; }
+  .search-input:focus { outline:none; border-color:var(--fp-accent); box-shadow:0 0 0 3px rgba(179,118,63,.15); }
+  .filter-select { width:100%; margin-top:8px; padding:9px 12px; border:1px solid var(--fp-line); border-radius:8px; font-family:inherit; font-size:13px; background:#fff; color:var(--fp-text); }
+  .results-count { padding:8px 22px; font-size:11.5px; color:var(--fp-text-soft); border-bottom:1px solid var(--fp-line); }
+  #card-list { flex:1; overflow-y:auto; padding:8px 14px 20px; }
+  .card { background:#fff; border:1px solid var(--fp-line); border-radius:10px; padding:12px 14px; margin-bottom:8px; cursor:pointer; transition:box-shadow .15s, border-color .15s; }
+  .card:hover, .card.active { border-color:var(--fp-accent); box-shadow:0 2px 10px rgba(74,63,56,.1); }
+  .card-top { display:flex; align-items:center; gap:8px; }
+  .card-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+  .card-name { font-size:13.5px; font-weight:600; color:var(--fp-text); line-height:1.3; }
+  .card-cat { font-size:11px; color:var(--fp-accent); font-weight:600; margin-top:3px; }
+  .card-meta { font-size:11.5px; color:var(--fp-text-soft); margin-top:4px; }
+  .empty-state { padding:30px 22px; text-align:center; color:var(--fp-text-soft); font-size:13px; }
+
+  /* ---------- Mapa ---------- */
+  #map { flex:1; position:relative; }
+  .mapboxgl-popup-content { font-family:'Montserrat',sans-serif; padding:16px; border-radius:10px; max-width:260px; }
+  .popup-cat { font-size:10.5px; font-weight:700; color:var(--fp-accent); text-transform:uppercase; letter-spacing:.3px; }
+  .popup-name { font-family:'Quicksand',sans-serif; font-size:15px; font-weight:700; color:var(--fp-brown-dark); margin:3px 0 6px; }
+  .popup-row { font-size:12px; color:var(--fp-text-soft); margin-top:3px; }
+  .popup-links { margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; }
+  .popup-links a { font-size:11.5px; font-weight:600; color:var(--fp-accent); text-decoration:none; border:1px solid var(--fp-accent); border-radius:6px; padding:5px 9px; }
+  .popup-links a:hover { background:var(--fp-accent); color:#fff; }
+
+  #loading { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:var(--fp-cream); font-family:'Quicksand',sans-serif; font-weight:600; color:var(--fp-brown-dark); z-index:5; }
+
+  #sidebar-toggle { display:none; }
+
+  @media (max-width: 768px) {
+    #app { position:relative; }
+    #sidebar { position:absolute; inset:0 0 0 auto; width:100%; height:45%; bottom:0; top:auto; border-right:none; border-top:1px solid var(--fp-line); border-radius:14px 14px 0 0; box-shadow:0 -4px 20px rgba(0,0,0,.12); transform:translateY(calc(100% - 54px)); transition:transform .25s ease; }
+    #sidebar.expanded { transform:translateY(0); }
+    #sidebar-toggle { display:block; width:40px; height:4px; border-radius:2px; background:var(--fp-line); margin:8px auto 0; }
+    #map { height:100%; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <div id="sidebar-toggle"></div>
+    <div class="sidebar-header">
+      <h1>Mapa de Agentes</h1>
+      <p>Empresas y entidades de Fuerteventura Protagonista</p>
+    </div>
+    <div class="sidebar-search">
+      <input id="search-input" class="search-input" type="text" placeholder="Buscar por nombre, municipio…">
+      <select id="category-filter" class="filter-select">
+        <option value="">Todas las categorías</option>
+      </select>
+    </div>
+    <div id="results-count" class="results-count"></div>
+    <div id="card-list"></div>
+  </aside>
+  <div id="map">
+    <div id="loading">Cargando mapa…</div>
+  </div>
+</div>
+
+<script>
+/* ============ CONFIGURACIÓN — rellenar antes de publicar ============ */
+const CONFIG = {
+  // Token público de Mapbox (pk.xxx). Crear uno propio en account.mapbox.com/access-tokens
+  // y restringirlo por URL a este dominio antes de publicar.
+  MAPBOX_TOKEN: 'PEGA_AQUI_TU_MAPBOX_TOKEN',
+  // Estilo del mapa. Este es un estilo estándar de Mapbox listo para usar.
+  // Se puede sustituir por un estilo propio creado en Mapbox Studio con la
+  // paleta de Fuerteventura Protagonista: 'mapbox://styles/TU_USUARIO/TU_ESTILO'
+  MAP_STYLE: 'mapbox://styles/mapbox/light-v11',
+  GEOJSON_URL: './empresas.geojson',
+  // Fuerteventura: el mapa no deja panear fuera de la isla + margen.
+  BOUNDS: [[-14.85, 27.95], [-13.55, 28.95]],
+  CENTER: [-14.0083, 28.3587],
+  ZOOM: 9.6,
+};
+
+const CATEGORY_PALETTE = ['#b3763f', '#0d6e63', '#b1524f', '#6b5c50', '#8a9a45', '#3f6b8a', '#a8763f', '#6f4e8a'];
+
+let allFeatures = [];
+let categoryColors = {};
+let activeCategory = '';
+let searchTerm = '';
+let activeCardId = null;
+let map;
+
+function escapeHtml(str) {
+  return (str || '').toString()
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function normalize(str) {
+  return (str || '').toString().normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+}
+
+function assignCategoryColors(features) {
+  const cats = [...new Set(features.map(f => f.properties.categoria).filter(Boolean))].sort();
+  cats.forEach((cat, i) => { categoryColors[cat] = CATEGORY_PALETTE[i % CATEGORY_PALETTE.length]; });
+  return cats;
+}
+
+function populateCategoryFilter(cats) {
+  const select = document.getElementById('category-filter');
+  cats.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    select.appendChild(opt);
+  });
+}
+
+function matchesFilters(feature) {
+  const p = feature.properties;
+  if (activeCategory && p.categoria !== activeCategory) return false;
+  if (!searchTerm) return true;
+  const haystack = normalize([p.nombre, p.municipio, p.direccion, p.categoria, p.programa, p.descripcion].join(' '));
+  return haystack.includes(searchTerm);
+}
+
+function currentFilteredFeatures() {
+  return allFeatures.filter(matchesFilters);
+}
+
+function refresh() {
+  const filtered = currentFilteredFeatures();
+  map.getSource('empresas').setData({ type: 'FeatureCollection', features: filtered });
+  renderCardList(filtered);
+  document.getElementById('results-count').textContent =
+    filtered.length === allFeatures.length
+      ? `${filtered.length} agentes`
+      : `${filtered.length} de ${allFeatures.length} agentes`;
+}
+
+function renderCardList(features) {
+  const list = document.getElementById('card-list');
+  list.innerHTML = '';
+  if (!features.length) {
+    list.innerHTML = '<div class="empty-state">No hay agentes que coincidan con la búsqueda.</div>';
+    return;
+  }
+  features
+    .slice()
+    .sort((a, b) => (a.properties.nombre || '').localeCompare(b.properties.nombre || '', 'es'))
+    .forEach(f => {
+      const p = f.properties;
+      const card = document.createElement('div');
+      card.className = 'card' + (p.id === activeCardId ? ' active' : '');
+      card.innerHTML = `
+        <div class="card-top">
+          <span class="card-dot" style="background:${categoryColors[p.categoria] || '#999'}"></span>
+          <span class="card-name">${escapeHtml(p.nombre) || 'Sin nombre'}</span>
+        </div>
+        <div class="card-cat">${escapeHtml(p.categoria)}</div>
+        <div class="card-meta">${escapeHtml(p.programa || p.municipio)}</div>`;
+      card.addEventListener('click', () => focusFeature(f));
+      list.appendChild(card);
+    });
+}
+
+function focusFeature(feature) {
+  activeCardId = feature.properties.id;
+  map.flyTo({ center: feature.geometry.coordinates, zoom: 14, essential: true });
+  openPopup(feature);
+  renderCardList(currentFilteredFeatures());
+}
+
+let activePopup = null;
+function openPopup(feature) {
+  if (activePopup) activePopup.remove();
+  const p = feature.properties;
+  const [lng, lat] = feature.geometry.coordinates;
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+  const links = [];
+  if (p.web) links.push(`<a href="${escapeHtml(p.web)}" target="_blank" rel="noopener">Web</a>`);
+  if (p.email) links.push(`<a href="mailto:${escapeHtml(p.email)}">Email</a>`);
+  if (p.telefono) links.push(`<a href="tel:${escapeHtml(p.telefono.replace(/\s+/g,''))}">Llamar</a>`);
+  links.push(`<a href="${directionsUrl}" target="_blank" rel="noopener">Cómo llegar</a>`);
+
+  activePopup = new mapboxgl.Popup({ offset: 14, closeButton: true })
+    .setLngLat([lng, lat])
+    .setHTML(`
+      <div class="popup-cat">${escapeHtml(p.categoria)}</div>
+      <div class="popup-name">${escapeHtml(p.nombre)}</div>
+      ${p.programa ? `<div class="popup-row">${escapeHtml(p.programa)}</div>` : ''}
+      ${p.direccion ? `<div class="popup-row">${escapeHtml(p.direccion)}</div>` : ''}
+      ${p.municipio ? `<div class="popup-row">${escapeHtml(p.municipio)}</div>` : ''}
+      ${p.descripcion ? `<div class="popup-row">${escapeHtml(p.descripcion)}</div>` : ''}
+      <div class="popup-links">${links.join('')}</div>
+    `)
+    .addTo(map);
+}
+
+function initMap() {
+  mapboxgl.accessToken = CONFIG.MAPBOX_TOKEN;
+  map = new mapboxgl.Map({
+    container: 'map',
+    style: CONFIG.MAP_STYLE,
+    center: CONFIG.CENTER,
+    zoom: CONFIG.ZOOM,
+    maxBounds: CONFIG.BOUNDS,
+  });
+  map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+  map.on('load', () => {
+    fetch(CONFIG.GEOJSON_URL)
+      .then(r => { if (!r.ok) throw new Error('No se pudo cargar ' + CONFIG.GEOJSON_URL); return r.json(); })
+      .then(geojson => {
+        allFeatures = geojson.features || [];
+        const cats = assignCategoryColors(allFeatures);
+        populateCategoryFilter(cats);
+
+        map.addSource('empresas', {
+          type: 'geojson',
+          data: geojson,
+          cluster: true,
+          clusterMaxZoom: 13,
+          clusterRadius: 45,
+        });
+
+        map.addLayer({
+          id: 'clusters',
+          type: 'circle',
+          source: 'empresas',
+          filter: ['has', 'point_count'],
+          paint: {
+            'circle-color': 'var(--fp-accent-hex)',
+            'circle-radius': ['step', ['get', 'point_count'], 16, 10, 20, 30, 26],
+            'circle-opacity': 0.85,
+          },
+        });
+        // circle-color no soporta var() CSS: fijamos el color directamente aquí.
+        map.setPaintProperty('clusters', 'circle-color', '#b3763f');
+
+        map.addLayer({
+          id: 'cluster-count',
+          type: 'symbol',
+          source: 'empresas',
+          filter: ['has', 'point_count'],
+          layout: { 'text-field': ['get', 'point_count_abbreviated'], 'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'], 'text-size': 12 },
+          paint: { 'text-color': '#ffffff' },
+        });
+
+        const matchExpr = ['match', ['get', 'categoria']];
+        cats.forEach(cat => matchExpr.push(cat, categoryColors[cat]));
+        matchExpr.push('#999999');
+
+        map.addLayer({
+          id: 'unclustered-point',
+          type: 'circle',
+          source: 'empresas',
+          filter: ['!', ['has', 'point_count']],
+          paint: {
+            'circle-color': matchExpr,
+            'circle-radius': 7,
+            'circle-stroke-width': 2,
+            'circle-stroke-color': '#ffffff',
+          },
+        });
+
+        map.on('click', 'clusters', (e) => {
+          const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+          const clusterId = features[0].properties.cluster_id;
+          map.getSource('empresas').getClusterExpansionZoom(clusterId, (err, zoom) => {
+            if (err) return;
+            map.easeTo({ center: features[0].geometry.coordinates, zoom });
+          });
+        });
+
+        map.on('click', 'unclustered-point', (e) => {
+          const feature = e.features[0];
+          feature.geometry = { type: 'Point', coordinates: feature.geometry.coordinates.slice() };
+          openPopup(feature);
+        });
+
+        map.on('mouseenter', 'clusters', () => map.getCanvas().style.cursor = 'pointer');
+        map.on('mouseleave', 'clusters', () => map.getCanvas().style.cursor = '');
+        map.on('mouseenter', 'unclustered-point', () => map.getCanvas().style.cursor = 'pointer');
+        map.on('mouseleave', 'unclustered-point', () => map.getCanvas().style.cursor = '');
+
+        renderCardList(allFeatures);
+        document.getElementById('results-count').textContent = `${allFeatures.length} agentes`;
+        document.getElementById('loading').style.display = 'none';
+      })
+      .catch(err => {
+        document.getElementById('loading').textContent = 'No se pudieron cargar los datos del mapa.';
+        console.error(err);
+      });
+  });
+}
+
+document.getElementById('search-input').addEventListener('input', (e) => {
+  searchTerm = normalize(e.target.value);
+  refresh();
+});
+document.getElementById('category-filter').addEventListener('change', (e) => {
+  activeCategory = e.target.value;
+  refresh();
+});
+document.getElementById('sidebar-toggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('expanded');
+});
+
+initMap();
+</script>
+</body>
+</html>
