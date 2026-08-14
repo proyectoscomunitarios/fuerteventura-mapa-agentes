@@ -835,6 +835,27 @@ function hideDetail() {
   }
 }
 
+let terrainLoaded = false;
+function ensureTerrain() {
+  if (terrainLoaded || USE_LOCAL_BASEMAP || !map) return;
+  terrainLoaded = true;
+  map.setFog({
+    'range': [0.5, 12],
+    'horizon-blend': 0.2,
+    'color': '#E8EEF2',
+    'high-color': '#534a44',
+    'space-color': '#0a0e1a',
+    'star-intensity': 0.15
+  });
+  map.addSource('mapbox-dem', {
+    type: 'raster-dem',
+    url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+    tileSize: 512,
+    maxzoom: 14
+  });
+  map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
+}
+
 function setView(mode) {
   currentMode = mode;
   const btn2 = document.getElementById('btn-2d');
@@ -845,6 +866,10 @@ function setView(mode) {
   btn3.setAttribute('aria-pressed', String(mode === '3d'));
   if (!map) return;
   if (mode === '3d') {
+    // El terreno (DEM) solo se pide la primera vez que se entra en 3D, no
+    // en la carga inicial — evita descargar teselas de elevacion de toda
+    // la isla cuando la mayoria de visitas se quedan en 2D.
+    ensureTerrain();
     setTowersVisible(true);
     map.easeTo({ pitch: 65, bearing: -17, duration: 1200 });
   } else {
@@ -884,25 +909,6 @@ function initMap() {
   });
 
   map.on('load', () => {
-    if (!USE_LOCAL_BASEMAP) {
-      map.setFog({
-        'range': [0.5, 12],
-        'horizon-blend': 0.2,
-        'color': '#E8EEF2',
-        'high-color': '#534a44',
-        'space-color': '#0a0e1a',
-        'star-intensity': 0.15
-      });
-
-      map.addSource('mapbox-dem', {
-        type: 'raster-dem',
-        url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
-        tileSize: 512,
-        maxzoom: 14
-      });
-      map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
-    }
-
     try {
       map.setLight({
         'anchor': 'viewport',
