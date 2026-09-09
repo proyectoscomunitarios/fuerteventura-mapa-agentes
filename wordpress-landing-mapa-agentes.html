@@ -3,28 +3,85 @@
   Plantilla NORMAL (con header/footer/menú del sitio) — a diferencia de la
   página del mapa en sí, que va en plantilla EN BLANCO (ver wordpress-embed.html).
 
-  Pegar dentro de un módulo de texto de Divi (o el editor normal de WordPress).
-  Enlazar esta página desde el menú principal como "Mapa de agentes".
+  Pegar dentro de un módulo de CÓDIGO de Divi (no el de Texto — lleva CSS y
+  el HTML del botón necesita salir tal cual, sin pasar por el editor
+  enriquecido). Colores y tipografías tomados de fuerteventuraprotagonista.com.
 -->
-<h1>Mapa de agentes</h1>
+<style>
+.fp-landing-magentes {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 56px 24px 72px;
+  font-family: 'Montserrat', sans-serif;
+}
+.fp-landing-magentes h1 {
+  font-family: 'Libre Baskerville', Georgia, serif;
+  font-size: 34px;
+  font-weight: 700;
+  color: #534a44;
+  line-height: 1.25;
+  margin: 0 0 8px;
+}
+.fp-landing-magentes .fp-rule {
+  width: 64px; height: 3px;
+  background: #8E6235;
+  border: 0;
+  margin: 0 0 32px;
+}
+.fp-landing-magentes p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #4a4038;
+  margin: 0 0 20px;
+}
+.fp-landing-magentes .fp-cta-box {
+  background: #F7F4EF;
+  border: 1px solid #E3DCCF;
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin: 40px 0 8px;
+}
+.fp-landing-magentes .fp-cta-box p { margin-bottom: 12px; }
+.fp-landing-magentes .fp-cta-box p:last-child { margin-bottom: 0; }
+.fp-landing-magentes .fp-cta-box a { color: #8E6235; font-weight: 600; text-decoration: underline; }
+.fp-landing-magentes .fp-map-cta { text-align: center; margin-top: 48px; }
+.fp-landing-magentes .fp-map-cta a {
+  display: inline-block;
+  background: #534a44;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 16px 40px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: background .2s ease, transform .2s ease;
+}
+.fp-landing-magentes .fp-map-cta a:hover { background: #3d3631; transform: translateY(-1px); }
+@media (max-width: 600px) {
+  .fp-landing-magentes { padding: 40px 20px 56px; }
+  .fp-landing-magentes h1 { font-size: 27px; }
+}
+</style>
 
-<p>
-En Fuerteventura existen numerosas entidades, asociaciones y servicios que
-trabajan por el desarrollo comunitario y la participación ciudadana en la
-isla. Este mapa, en continua actualización, reúne las entidades recogidas a
-través del proyecto Fuerteventura Protagonista, con el objetivo de facilitar
-su conocimiento, favorecer la coordinación y fortalecer el trabajo en red.
-</p>
+<div class="fp-landing-magentes">
+  <h1>Mapa de agentes</h1>
+  <hr class="fp-rule">
 
-<p>
-Si desea que su entidad forme parte del mapa, puede darse de alta a través
-del <a href="ENLACE_AL_FORMULARIO_DE_ALTA" target="_blank" rel="noopener">formulario de registro</a>.
-</p>
+  <p>Fuerteventura cuenta con una amplia diversidad de entidades, colectivos, asociaciones, administraciones y otros agentes que contribuyen al desarrollo comunitario, la participación ciudadana y la construcción de una isla más cohesionada.</p>
 
-<p style="text-align:center; margin-top:32px;">
-  <a href="/mapa-interactivo/" style="display:inline-block; background:#534a44; color:#fff;
-     font-family:sans-serif; font-size:15px; font-weight:600; padding:14px 32px;
-     border-radius:8px; text-decoration:none;">
-    Explora el mapa de agentes →
-  </a>
-</p>
+  <p>Este Mapa Insular de Agentes, Programas, Proyectos y Servicios para la Participación y el Desarrollo Comunitario, desarrollado en el marco del programa Fuerteventura Protagonista, reúne y visibiliza los agentes identificados en la isla que desarrollan acciones relacionadas con la participación ciudadana, el asociacionismo, la dinamización comunitaria, la convivencia, la cultura, la inclusión, el desarrollo local y el fortalecimiento de las redes comunitarias, entre otros.</p>
+
+  <p>El mapa recoge información tanto sobre las entidades y agentes presentes en el territorio como sobre los programas, proyectos, iniciativas y servicios que desarrollan, permitiendo conocer los recursos y acciones existentes en la isla y los ámbitos en los que intervienen. Esta información se organiza y actualiza periódicamente para facilitar una visión dinámica del tejido comunitario de Fuerteventura.</p>
+
+  <p>El objetivo es facilitar el conocimiento de los recursos existentes, favorecer el contacto y la coordinación entre agentes, promover nuevas oportunidades de colaboración y fortalecer el trabajo en red, contribuyendo así al desarrollo de una comunidad insular más participativa, cohesionada y conectada.</p>
+
+  <div class="fp-cta-box">
+    <p>¿Quieres que tu entidad, proyecto o servicio forme parte del mapa?</p>
+    <p>Puedes registrar o actualizar la información a través del siguiente formulario: <a href="Enlace al formulario" target="_blank" rel="noopener">formulario de registro</a>.</p>
+  </div>
+
+  <div class="fp-map-cta">
+    <a href="/mapa-interactivo/">Explora el mapa de agentes →</a>
+  </div>
+</div>
