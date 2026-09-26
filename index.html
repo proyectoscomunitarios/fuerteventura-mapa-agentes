@@ -35,12 +35,14 @@
         <button type="button" id="btn-3d" aria-pressed="false">3D</button>
         <button type="button" id="btn-fit">Centrar</button>
       </div>
-      <div id="filter-sections"></div>
-      <div class="results-header" aria-live="polite">
-        <span><strong id="results-count">—</strong> entidades</span>
-        <button type="button" id="btn-clear-filters" class="btn-clear" hidden>Limpiar filtros</button>
+      <div class="sidebar-scroll">
+        <div id="filter-sections"></div>
+        <div class="results-header" aria-live="polite">
+          <span><strong id="results-count">—</strong> entidades</span>
+          <button type="button" id="btn-clear-filters" class="btn-clear" hidden>Limpiar filtros</button>
+        </div>
+        <div class="entity-list" id="entity-list"></div>
       </div>
-      <div class="entity-list" id="entity-list"></div>
     </div>
     <div class="view-detail" id="view-detail"></div>
   </aside>
@@ -686,7 +688,7 @@ function updateFacetedCounts() {
     const n = (counts[p.dataset.dim] || {})[p.dataset.value] || 0;
     const countEl = p.querySelector('.count');
     if (countEl) countEl.textContent = n;
-    p.classList.toggle('empty', n === 0);
+    p.classList.toggle('zero', n === 0);
   });
 }
 

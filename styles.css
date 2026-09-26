@@ -92,8 +92,12 @@ details.sector-filter[open] summary::before { transform: rotate(90deg); }
 }
 .sector-pill.selected .dot { background: #FFF; box-shadow: none; }
 .sector-pill .count { font-size: 10px; opacity: 0.75; margin-left: 2px; }
-/* Atenúa pills cuyo conteo facetado por filtros activos es 0. */
-.sector-pill.empty:not(.selected) { opacity: 0.4; }
+/* Atenúa pills cuyo conteo facetado por filtros activos es 0.
+   OJO: clase "zero", NO "empty" -- "empty" ya la usa el mensaje de
+   "sin resultados" de la lista (ver .empty mas abajo) y con esa
+   clase compartida el pill heredaba su padding/font-size al tener
+   la misma especificidad CSS, agrandando el pill. */
+.sector-pill.zero:not(.selected) { opacity: 0.4; }
 
 /* Desplegable multi-selección (checkboxes) para dimensiones con muchos
    valores/nombres largos, ej. "Tipología de Sujeto" — las pastillas no
@@ -158,8 +162,6 @@ details.sector-filter[open] summary::before { transform: rotate(90deg); }
 .btn-clear[hidden] { display: none; }
 
 .entity-list {
-  flex: 1;
-  overflow-y: auto;
   padding: 4px 16px 20px;
 }
 .entity-card {
@@ -330,6 +332,10 @@ details.sector-filter[open] summary::before { transform: rotate(90deg); }
 
 .view-list { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
 .view-list.hidden { display: none; }
+/* Contiene filtros + resultados + lista: todo hace scroll junto, para que
+   nunca quede contenido oculto sin forma de llegar a él (ej. al anadir
+   nuevos filtros que ocupen mas alto del que cabe en pantalla). */
+.sidebar-scroll { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; }
 .view-detail { display: none; flex-direction: column; flex: 1; overflow-y: auto; }
 .view-detail.active { display: flex; }
 
