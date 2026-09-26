@@ -254,14 +254,6 @@ details.sector-filter[open] summary::before { transform: rotate(90deg); }
 }
 .mapboxgl-popup-content .pop-links a:hover { text-decoration: underline; }
 
-.demo-banner {
-  position: absolute; bottom: 12px; left: 12px;
-  background: rgba(13, 78, 71, 0.95); color: #FFF;
-  padding: 8px 14px; border-radius: 6px; font-size: 11px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 1px;
-  z-index: 1; box-shadow: 0 2px 10px rgba(0,0,0,.2);
-  pointer-events: none;
-}
 :focus-visible {
   outline: 2px solid #534a44;
   outline-offset: 2px;
@@ -334,7 +326,6 @@ details.sector-filter[open] summary::before { transform: rotate(90deg); }
     background: #CCC; border-radius: 2px;
   }
   .sidebar-header { padding-top: 4px; }
-  .demo-banner { bottom: 8px; left: 8px; font-size: 10px; padding: 6px 10px; }
 }
 
 .view-list { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
