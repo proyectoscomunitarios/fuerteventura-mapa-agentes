@@ -95,6 +95,39 @@ details.sector-filter[open] summary::before { transform: rotate(90deg); }
 /* Atenúa pills cuyo conteo facetado por filtros activos es 0. */
 .sector-pill.empty:not(.selected) { opacity: 0.4; }
 
+/* Desplegable multi-selección (checkboxes) para dimensiones con muchos
+   valores/nombres largos, ej. "Tipología de Sujeto" — las pastillas no
+   encajan bien con 30+ opciones de texto largo. */
+.subject-filter-block { padding: 12px 24px; border-bottom: 1px solid #F0F0F0; background: #FAFAFA; }
+.subject-filter-label {
+  display: block; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.8px; color: #666; margin-bottom: 10px;
+}
+.subject-dropdown { position: relative; }
+.subject-dropdown-toggle {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 9px 12px; border: 1px solid #E0E0E0; border-radius: 8px; background: #FFF;
+  font-family: inherit; font-size: 12.5px; font-weight: 600; color: #444;
+  cursor: pointer; text-align: left; transition: border-color 0.15s;
+}
+.subject-dropdown-toggle:hover { border-color: #534a44; }
+.subject-dropdown-toggle.active { border-color: #534a44; color: #534a44; }
+.subject-dropdown-toggle .chevron { flex-shrink: 0; color: #999; font-size: 10px; transition: transform 0.15s; }
+.subject-dropdown.open .subject-dropdown-toggle .chevron { transform: rotate(180deg); }
+.subject-dropdown-panel {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 20;
+  background: #FFF; border: 1px solid #E0E0E0; border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.14);
+  max-height: 280px; overflow-y: auto; padding: 6px;
+}
+.subject-dropdown-option {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 7px 8px; border-radius: 6px;
+  font-size: 12.5px; color: #444; line-height: 1.35; cursor: pointer;
+}
+.subject-dropdown-option:hover { background: #FAF7F1; }
+.subject-dropdown-option input[type="checkbox"] { margin-top: 2px; flex-shrink: 0; accent-color: #534a44; }
+
 .results-header {
   padding: 12px 24px 8px;
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.9px;

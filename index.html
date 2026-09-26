@@ -230,7 +230,7 @@ const FILTER_BLOCKLIST = new Set([
 const FILTER_MAX_CARDINALITY = 40;
 // En FP la dimensión que dispara vuelo de cámara es el Municipio.
 const FLYTO_DIM = 'Municipio';
-const FILTER_DIM_ORDER = ['Municipio', 'Tipología', 'Protagonista', 'Isla', 'Provincia'];
+const FILTER_DIM_ORDER = ['Municipio', 'Tipología', 'Tipología de Sujeto', 'Protagonista', 'Isla', 'Provincia'];
 
 function featureFilters(f) {
   const p = f.properties;
@@ -240,12 +240,24 @@ function featureFilters(f) {
   // alimenta tanto el color de los marcadores como este filtro, pero se
   // etiqueta "Tipología" para que coincida con la columna real del Sheet.
   if (p.sector) out['Tipología'] = p.sector;
+  if (p.subjectType) out['Tipología de Sujeto'] = p.subjectType;
   if (p.protagonist) out['Protagonista'] = p.protagonist;
   if (p.municipality) out['Municipio'] = p.municipality;
   if (p.province) out['Provincia'] = p.province;
   if (p.island) out['Isla'] = p.island;
   return out;
 }
+
+// Dimensiones que se muestran como desplegable de casillas (multi-select)
+// en vez de pastillas — para categorías con muchos valores y nombres largos
+// donde las pastillas no caben bien.
+const DROPDOWN_FILTER_DIMS = new Set(['Tipología de Sujeto']);
+// Funciones de reseteo de cada desplegable renderizado, para que
+// clearAllFilters() tambien las limpie visualmente.
+let dropdownFilterResetters = [];
+// Funciones para resincronizar las casillas de cada desplegable tras
+// restaurar el estado de filtros desde la URL (ver initSidebar()).
+let dropdownFilterSyncers = [];
 
 function computeFilterDims() {
   const byDim = {};
@@ -388,12 +400,115 @@ function openEntityFromUrl() {
   if (map && map.loaded()) open(); else if (map) map.once('load', open);
 }
 
+// Desplegable de casillas (multi-select) para una dimensión con muchos
+// valores/nombres largos, donde las pastillas no encajan bien. Reutiliza
+// el mismo activeFilters[dim.name] (Set) que usan las pastillas, así que
+// se integra solo con la búsqueda, "Limpiar filtros" y el estado en la URL.
+function renderDropdownFilter(dim) {
+  const set = activeFilters[dim.name];
+
+  const block = document.createElement('div');
+  block.className = 'subject-filter-block';
+  const label = document.createElement('span');
+  label.className = 'subject-filter-label';
+  label.textContent = 'Filtrar por ' + dim.name.toLowerCase();
+  block.appendChild(label);
+
+  const wrap = document.createElement('div');
+  wrap.className = 'subject-dropdown';
+
+  const toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.className = 'subject-dropdown-toggle';
+  toggle.setAttribute('aria-haspopup', 'listbox');
+  toggle.setAttribute('aria-expanded', 'false');
+
+  const panel = document.createElement('div');
+  panel.className = 'subject-dropdown-panel';
+  panel.setAttribute('role', 'group');
+  panel.setAttribute('aria-label', 'Filtrar por ' + dim.name);
+  panel.hidden = true;
+
+  function updateToggleLabel() {
+    const n = set.size;
+    toggle.innerHTML = n
+      ? `<span>${n} seleccionada${n > 1 ? 's' : ''}</span><span class="chevron">▾</span>`
+      : `<span>Todas</span><span class="chevron">▾</span>`;
+    toggle.classList.toggle('active', n > 0);
+  }
+
+  dim.values.forEach(val => {
+    const optLabel = document.createElement('label');
+    optLabel.className = 'subject-dropdown-option';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.value = val;
+    cb.checked = set.has(val);
+    cb.addEventListener('change', () => {
+      if (cb.checked) set.add(val); else set.delete(val);
+      updateToggleLabel();
+      applyFilter();
+      syncFilterStateToUrl();
+    });
+    optLabel.appendChild(cb);
+    const span = document.createElement('span');
+    span.textContent = val;
+    optLabel.appendChild(span);
+    panel.appendChild(optLabel);
+  });
+
+  function closePanel() {
+    panel.hidden = true;
+    wrap.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+
+  toggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const willOpen = panel.hidden;
+    if (willOpen) {
+      panel.hidden = false;
+      wrap.classList.add('open');
+      toggle.setAttribute('aria-expanded', 'true');
+    } else {
+      closePanel();
+    }
+  });
+  document.addEventListener('click', (e) => { if (!wrap.contains(e.target)) closePanel(); });
+  panel.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closePanel(); toggle.focus(); } });
+
+  updateToggleLabel();
+  wrap.appendChild(toggle);
+  wrap.appendChild(panel);
+  block.appendChild(wrap);
+
+  dropdownFilterResetters.push(() => {
+    panel.querySelectorAll('input[type=checkbox]').forEach(cb => { cb.checked = false; });
+    updateToggleLabel();
+  });
+  // Este desplegable se construye antes de restaurar el estado de filtros
+  // desde la URL (ver el final de initSidebar()), así que hay que
+  // resincronizar las casillas después con esta misma función.
+  dropdownFilterSyncers.push(() => {
+    panel.querySelectorAll('input[type=checkbox]').forEach(cb => { cb.checked = set.has(cb.value); });
+    updateToggleLabel();
+  });
+
+  return block;
+}
+
 function initSidebar() {
   computeFilterDims();
 
   const container = document.getElementById('filter-sections');
   container.innerHTML = '';
+  dropdownFilterResetters = [];
+  dropdownFilterSyncers = [];
   filterDims.forEach((dim, di) => {
+    if (DROPDOWN_FILTER_DIMS.has(dim.name)) {
+      container.appendChild(renderDropdownFilter(dim));
+      return;
+    }
     const det = document.createElement('details');
     det.className = 'sector-filter';
     if (di < 2) det.open = true;
@@ -477,6 +592,7 @@ function initSidebar() {
       p.setAttribute('aria-pressed', 'true');
     }
   });
+  dropdownFilterSyncers.forEach(sync => sync());
   if (initial.q) {
     const search = document.getElementById('search');
     if (search) search.value = initial.q;
@@ -522,6 +638,7 @@ function clearAllFilters() {
     p.classList.remove('selected');
     p.setAttribute('aria-pressed', 'false');
   });
+  dropdownFilterResetters.forEach(reset => reset());
   const search = document.getElementById('search');
   if (search) search.value = '';
   applyFilter();
@@ -532,7 +649,7 @@ function matchesSearch(props) {
   if (!searchQuery) return true;
   const fields = [
     props.name, props.municipality, props.province, props.address,
-    props.sector, props.protagonist
+    props.sector, props.subjectType, props.protagonist
   ].map(normalize);
   return fields.some(f => f.includes(searchQuery));
 }
