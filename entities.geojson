@@ -3,37 +3,9 @@
   "metadata": {
     "source": "google-sheet-migrado",
     "sheet_id": "1m1UVzUPzZdOBWmSFShpe8835YpWmHdWXnVtW7531tUY",
-    "row_count": 122
+    "row_count": 121
   },
   "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "1132698d-1592-4ca5-a063-8c4ef9a072f9",
-        "name": "Alison Brophy",
-        "sector": "Servicios",
-        "subjectType": "",
-        "initiative": "",
-        "municipality": "La Oliva",
-        "province": "Las Palmas",
-        "island": "Fuerteventura",
-        "address": "Calle Lepanto 33, Corralejo",
-        "phones": [
-          "0034 677826366"
-        ],
-        "emails": [
-          "strongertogetherfuerteventura@gmail.com"
-        ],
-        "url": ""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -13.8718733,
-          28.7388871
-        ]
-      }
-    },
     {
       "type": "Feature",
       "properties": {
@@ -2069,34 +2041,6 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "a32c3dd6-baf7-4fb4-af2e-2584fbaeaff0",
-        "name": "Asociación de Voluntarios de Ayuda a la Naturaleza de Fuerteventura.",
-        "sector": "Servicios",
-        "subjectType": "",
-        "initiative": "",
-        "municipality": "Puerto del Rosario",
-        "province": "Las Palmas",
-        "island": "Fuerteventura",
-        "address": "Calle Fotógrafo Herrera s/n; 35600, Puerto del Rosario, Las Palmas",
-        "phones": [
-          "660 766 319"
-        ],
-        "emails": [
-          "avanfuer@gmail.com"
-        ],
-        "url": ""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -13.8525488,
-          28.5035493
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "id": "813b4ee5-0676-477f-b301-a3caf790702c",
         "name": "Asociación Social Sahara Fuerte",
         "sector": "Servicios",
@@ -3405,6 +3349,34 @@
         "coordinates": [
           -13.8525488,
           28.5035493
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "5727de2e-7732-4d33-8f81-11091427f47a",
+        "name": "Alison Brophy",
+        "sector": "Servicios",
+        "subjectType": "",
+        "initiative": "",
+        "municipality": "La Oliva",
+        "province": "Las Palmas",
+        "island": "Fuerteventura",
+        "address": "Calle Lepanto 33, Corralejo, Las Palmas",
+        "phones": [
+          "677 826 366"
+        ],
+        "emails": [
+          "strongertogetherfuerteventura@gmail.com"
+        ],
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -13.8718733,
+          28.7388871
         ]
       }
     }
