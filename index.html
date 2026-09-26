@@ -891,6 +891,8 @@ function renderDetail(feature) {
       </div>
       <div class="detail-pill" style="background:${color}">${escapeHTML(p.sector)}</div>
       ${p.protagonist ? `<div class="detail-section"><div class="detail-section-label">Protagonista</div><div class="detail-section-value">${escapeHTML(p.protagonist)}</div></div>` : ''}
+      ${p.subjectType ? `<div class="detail-section"><div class="detail-section-label">Tipología de sujeto</div><div class="detail-section-value">${escapeHTML(p.subjectType)}</div></div>` : ''}
+      ${p.initiative ? `<div class="detail-section"><div class="detail-section-label">Programa, proyecto o servicio</div><div class="detail-section-value">${escapeHTML(p.initiative)}</div></div>` : ''}
       ${addressBlock}
       ${phonesBlock}
       ${emailsBlock}

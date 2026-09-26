@@ -9,14 +9,17 @@ hace falta ninguna credencial: se descarga como CSV público.
 
 Las propiedades de salida usan los nombres que espera index.html
 (name, sector, municipality, province, island, address, phones, emails,
-url) — "sector" es la columna Tipología del Sheet.
+url) — "sector" es la columna Tipología del Sheet, "initiative" es el
+nombre del Programa/Proyecto/Servicio (columna E) y "subjectType" es la
+Tipología de Sujeto (columna W).
 
-"Tipología de Sujeto" (columna W del Sheet de respuestas del formulario)
-NO pasa por el Apps Script de migración, así que este script lee TAMBIÉN
-el Sheet de respuestas directamente (es público igual que el migrado) y
-la cruza por nombre de entidad — sin tocar el Apps Script ni depender de
-que alguien lo actualice. Funciona igual para altas nuevas que para las
-que ya existen.
+"Tipología de Sujeto" (columna W) y "Programa/Proyecto/Servicio" (columna
+E, el nombre del supuesto que desarrolla la entidad) del Sheet de
+respuestas del formulario NO pasan por el Apps Script de migración, así
+que este script lee TAMBIÉN el Sheet de respuestas directamente (es
+público igual que el migrado) y las cruza por nombre de entidad — sin
+tocar el Apps Script ni depender de que alguien lo actualice. Funciona
+igual para altas nuevas que para las que ya existen.
 
 Uso local:
     export SHEET_ID=1m1UVzUPzZdOBWmSFShpe8835YpWmHdWXnVtW7531tUY
@@ -59,6 +62,7 @@ COL = {
 # que necesitamos aparte porque el Apps Script no las copia al migrado.
 FORM_COL = {
     "nombre": 2,
+    "supuesto": 4,
     "tipologia_sujeto": 22,
 }
 
@@ -82,20 +86,22 @@ def normalize_name(s):
     return re.sub(r"\s+", " ", s).strip().lower()
 
 
-def fetch_subject_types(form_sheet_id, form_gid):
-    """Nombre de entidad -> Tipología de Sujeto, leído directamente del
-    Sheet de respuestas del formulario (columna W, que el Apps Script de
-    migración no copia al Sheet oficial)."""
+def fetch_form_extra(form_sheet_id, form_gid):
+    """Nombre de entidad -> {subjectType, initiative}, leído directamente
+    del Sheet de respuestas del formulario (columnas W y E, que el Apps
+    Script de migración no copia al Sheet oficial)."""
     if not form_sheet_id or not form_gid:
-        print("::warning::Faltan FORM_SHEET_ID/FORM_SHEET_GID, se omite Tipología de Sujeto.")
+        print("::warning::Faltan FORM_SHEET_ID/FORM_SHEET_GID, se omiten Tipología de Sujeto y Programa/Proyecto/Servicio.")
         return {}
     _, rows = fetch_csv_rows(form_sheet_id, form_gid)
     lookup = {}
     for row in rows:
         nombre = row[FORM_COL["nombre"]].strip() if len(row) > FORM_COL["nombre"] else ""
+        if not nombre:
+            continue
         tipo = row[FORM_COL["tipologia_sujeto"]].strip() if len(row) > FORM_COL["tipologia_sujeto"] else ""
-        if nombre and tipo:
-            lookup[normalize_name(nombre)] = tipo
+        supuesto = row[FORM_COL["supuesto"]].strip() if len(row) > FORM_COL["supuesto"] else ""
+        lookup[normalize_name(nombre)] = {"subjectType": tipo, "initiative": supuesto}
     return lookup
 
 
@@ -132,8 +138,8 @@ def fetch_csv_rows(sheet_id, gid):
     return rows[0], rows[1:]
 
 
-def rows_to_features(rows, subject_lookup=None):
-    subject_lookup = subject_lookup or {}
+def rows_to_features(rows, form_extra=None):
+    form_extra = form_extra or {}
     features = []
     warnings = []
     seen_ids = set()
@@ -160,12 +166,14 @@ def rows_to_features(rows, subject_lookup=None):
 
         telefono = cell(row, "telefono")
         email = cell(row, "email")
+        extra = form_extra.get(normalize_name(nombre), {})
 
         props = {
             "id": entity_id,
             "name": nombre,
             "sector": cell(row, "tipologia"),
-            "subjectType": subject_lookup.get(normalize_name(nombre), ""),
+            "subjectType": extra.get("subjectType", ""),
+            "initiative": extra.get("initiative", ""),
             "municipality": cell(row, "municipio"),
             "province": cell(row, "provincia"),
             "island": cell(row, "isla"),
@@ -194,10 +202,10 @@ def main():
 
     form_sheet_id = os.environ.get("FORM_SHEET_ID")
     form_gid = os.environ.get("FORM_SHEET_GID")
-    subject_lookup = fetch_subject_types(form_sheet_id, form_gid)
+    form_extra = fetch_form_extra(form_sheet_id, form_gid)
 
     header, rows = fetch_csv_rows(sheet_id, gid)
-    features, warnings = rows_to_features(rows, subject_lookup)
+    features, warnings = rows_to_features(rows, form_extra)
 
     missing_subject = [f["properties"]["name"] for f in features if not f["properties"]["subjectType"]]
     if missing_subject:
