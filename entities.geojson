@@ -3,7 +3,7 @@
   "metadata": {
     "source": "google-sheet-migrado",
     "sheet_id": "1m1UVzUPzZdOBWmSFShpe8835YpWmHdWXnVtW7531tUY",
-    "row_count": 118
+    "row_count": 122
   },
   "features": [
     {
@@ -3293,6 +3293,118 @@
         "coordinates": [
           -13.8603833,
           28.5087937
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "c5358e1f-bc93-4949-aded-17786028dd89",
+        "name": "Stronger Together - Asociacion de extranjeros",
+        "sector": "Servicios",
+        "subjectType": "Asociación formal de personas migradas",
+        "initiative": "Stronger Together - Asociacion de extranjeros",
+        "municipality": "La Oliva",
+        "province": "Las Palmas",
+        "island": "Fuerteventura",
+        "address": "Calle Lepanto 33, Corralejo",
+        "phones": [
+          "0034 677826366"
+        ],
+        "emails": [
+          "strongertogetherfuerteventura@gmail.com"
+        ],
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -13.8718733,
+          28.7388871
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "035b8133-13f2-423a-a96c-8032984ce008",
+        "name": "Carolina",
+        "sector": "Programa",
+        "subjectType": "",
+        "initiative": "Carolina",
+        "municipality": "Betancuria",
+        "province": "Las Palmas",
+        "island": "Fuerteventura",
+        "address": "Carolina",
+        "phones": [
+          "Carolina"
+        ],
+        "emails": [
+          "Carolina"
+        ],
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -14.0573049,
+          28.4248761
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "3ed3f7f5-3b1a-48e2-915f-c9437b881cbc",
+        "name": "Federación de Asociaciones de Personas Sordas - FASICAN",
+        "sector": "Proyecto",
+        "subjectType": "",
+        "initiative": "Medidas de apoyo al colectivo de Personas Sordas de Fuerteventura",
+        "municipality": "Puerto del Rosario",
+        "province": "Las Palmas",
+        "island": "Fuerteventura",
+        "address": "C/ Goya, 3, Centro Cultural Buenavista, 35600, Puerto del Rosario",
+        "phones": [
+          "922213536"
+        ],
+        "emails": [
+          "fasican@fasican.org"
+        ],
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -13.8711659,
+          28.4986813
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "459d51db-df37-45fb-af68-e1b8c08e7d8a",
+        "name": "Asociación de Voluntarios de Ayuda a la Naturaleza de Fuerteventura",
+        "sector": "Servicios",
+        "subjectType": "Asociación o Grupo ecologista",
+        "initiative": "AVANFUER",
+        "municipality": "Puerto del Rosario",
+        "province": "Las Palmas",
+        "island": "Fuerteventura",
+        "address": "Calle Fotógrafo Herrera s/n; 35600, Puerto del Rosario, Las Palmas",
+        "phones": [
+          "660 766 319"
+        ],
+        "emails": [
+          "avanfuer@gmail.com"
+        ],
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -13.8525488,
+          28.5035493
         ]
       }
     }
