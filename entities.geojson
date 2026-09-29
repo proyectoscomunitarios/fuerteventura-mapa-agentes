@@ -3,7 +3,7 @@
   "metadata": {
     "source": "google-sheet-migrado",
     "sheet_id": "1m1UVzUPzZdOBWmSFShpe8835YpWmHdWXnVtW7531tUY",
-    "row_count": 120
+    "row_count": 118
   },
   "features": [
     {
@@ -87,34 +87,6 @@
         "coordinates": [
           -13.860299,
           28.4970877
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "32ad6b6e-fddf-4c6f-9138-89e91d33e112",
-        "name": "Stronger Together Asc de Extranjeros",
-        "sector": "Servicios",
-        "subjectType": "",
-        "initiative": "",
-        "municipality": "La Oliva",
-        "province": "Las Palmas",
-        "island": "Fuerteventura",
-        "address": "Calle Lepanto 33, Corralejo, La Oliva 35660",
-        "phones": [
-          "606997094"
-        ],
-        "emails": [
-          "strongertogetherfuerteventura@gmail.com"
-        ],
-        "url": ""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -13.8718733,
-          28.7388871
         ]
       }
     },
@@ -3321,34 +3293,6 @@
         "coordinates": [
           -13.8525488,
           28.5035493
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "5727de2e-7732-4d33-8f81-11091427f47a",
-        "name": "Alison Brophy",
-        "sector": "Servicios",
-        "subjectType": "",
-        "initiative": "",
-        "municipality": "La Oliva",
-        "province": "Las Palmas",
-        "island": "Fuerteventura",
-        "address": "Calle Lepanto 33, Corralejo, Las Palmas",
-        "phones": [
-          "677 826 366"
-        ],
-        "emails": [
-          "strongertogetherfuerteventura@gmail.com"
-        ],
-        "url": ""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -13.8718733,
-          28.7388871
         ]
       }
     }
