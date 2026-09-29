@@ -60,20 +60,31 @@ COL = {
 
 # Columnas del Sheet de respuestas del formulario (bruto, el de la jefa)
 # que necesitamos aparte porque el Apps Script no las copia al migrado.
-#
-# "tipologia_sujeto" (antes "Tipología de Sujeto", columna W) esta ahora en
-# la columna X (indice 23), no la W (22): el 29/09/2026 alguien añadio en
-# el formulario una pregunta nueva llamada "Ámbito" justo delante, que
-# desplazo la de verdad una posicion. Ojo: ahora mismo hay DOS columnas
-# seguidas tituladas "Ámbito" en el Sheet (la nueva, vacia, en W; la de
-# siempre, con los datos, en X) -- si se vuelve a tocar el formulario y
-# esto cambia otra vez, comprobarlo con las cabeceras reales del Sheet en
-# vez de asumir que el indice se mantiene.
+# "nombre" y "supuesto" van fijas por posicion (estables hasta ahora).
 FORM_COL = {
     "nombre": 2,
     "supuesto": 4,
-    "tipologia_sujeto": 23,
 }
+
+# "Tipología de Sujeto" SI se ha movido de posicion al menos una vez (se
+# renombro a "Ámbito" y una pregunta nueva del formulario la desplazo de
+# la W a la X). Para no depender de un numero de columna fijo, se busca
+# por el titulo de la cabecera -- probando los nombres antiguo y nuevo --
+# y si hay varias columnas con ese mismo titulo (p.ej. una pregunta
+# duplicada sin borrar todavia), se queda con la que de verdad tiene
+# datos rellenos.
+TIPOLOGIA_SUJETO_HEADERS = ["tipologia de sujeto", "ambito"]
+
+
+def _find_col_by_header(header, rows, keywords):
+    matches = [i for i, h in enumerate(header) for kw in keywords if kw in normalize_name(h)]
+    if not matches:
+        return -1
+    if len(matches) == 1:
+        return matches[0]
+    # Varias columnas con el mismo titulo: la que tenga mas celdas rellenas.
+    counts = {i: sum(1 for r in rows if len(r) > i and r[i].strip()) for i in matches}
+    return max(counts, key=counts.get)
 
 # Fuerteventura + margen. El mapa es SOLO de esta isla, aunque el Sheet
 # pueda incluir en el futuro alguna entidad con sede en otra isla.
@@ -97,18 +108,22 @@ def normalize_name(s):
 
 def fetch_form_extra(form_sheet_id, form_gid):
     """Nombre de entidad -> {subjectType, initiative}, leído directamente
-    del Sheet de respuestas del formulario (columnas W y E, que el Apps
-    Script de migración no copia al Sheet oficial)."""
+    del Sheet de respuestas del formulario (Tipología de Sujeto y columna
+    E, que el Apps Script de migración no copia al Sheet oficial)."""
     if not form_sheet_id or not form_gid:
         print("::warning::Faltan FORM_SHEET_ID/FORM_SHEET_GID, se omiten Tipología de Sujeto y Programa/Proyecto/Servicio.")
         return {}
-    _, rows = fetch_csv_rows(form_sheet_id, form_gid)
+    header, rows = fetch_csv_rows(form_sheet_id, form_gid)
+    tipo_col = _find_col_by_header(header, rows, TIPOLOGIA_SUJETO_HEADERS)
+    if tipo_col < 0:
+        print("::warning::No se encuentra la columna 'Tipología de Sujeto' / 'Ámbito' en el Sheet de respuestas "
+              "(¿cambió el título de la pregunta?). Se omite ese dato para todas las entidades.")
     lookup = {}
     for row in rows:
         nombre = row[FORM_COL["nombre"]].strip() if len(row) > FORM_COL["nombre"] else ""
         if not nombre:
             continue
-        tipo = row[FORM_COL["tipologia_sujeto"]].strip() if len(row) > FORM_COL["tipologia_sujeto"] else ""
+        tipo = row[tipo_col].strip() if tipo_col >= 0 and len(row) > tipo_col else ""
         supuesto = row[FORM_COL["supuesto"]].strip() if len(row) > FORM_COL["supuesto"] else ""
         lookup[normalize_name(nombre)] = {"subjectType": tipo, "initiative": supuesto}
     return lookup
