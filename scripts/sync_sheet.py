@@ -60,10 +60,19 @@ COL = {
 
 # Columnas del Sheet de respuestas del formulario (bruto, el de la jefa)
 # que necesitamos aparte porque el Apps Script no las copia al migrado.
+#
+# "tipologia_sujeto" (antes "Tipología de Sujeto", columna W) esta ahora en
+# la columna X (indice 23), no la W (22): el 29/09/2026 alguien añadio en
+# el formulario una pregunta nueva llamada "Ámbito" justo delante, que
+# desplazo la de verdad una posicion. Ojo: ahora mismo hay DOS columnas
+# seguidas tituladas "Ámbito" en el Sheet (la nueva, vacia, en W; la de
+# siempre, con los datos, en X) -- si se vuelve a tocar el formulario y
+# esto cambia otra vez, comprobarlo con las cabeceras reales del Sheet en
+# vez de asumir que el indice se mantiene.
 FORM_COL = {
     "nombre": 2,
     "supuesto": 4,
-    "tipologia_sujeto": 22,
+    "tipologia_sujeto": 23,
 }
 
 # Fuerteventura + margen. El mapa es SOLO de esta isla, aunque el Sheet
