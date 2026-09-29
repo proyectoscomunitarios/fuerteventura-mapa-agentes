@@ -231,16 +231,16 @@ const FILTER_BLOCKLIST = new Set([
 const FILTER_MAX_CARDINALITY = 40;
 // En FP la dimensión que dispara vuelo de cámara es el Municipio.
 const FLYTO_DIM = 'Municipio';
-const FILTER_DIM_ORDER = ['Municipio', 'Tipología', 'Tipología de Sujeto', 'Protagonista', 'Isla', 'Provincia'];
+const FILTER_DIM_ORDER = ['Municipio', 'Iniciativa', 'Tipología de Sujeto', 'Protagonista', 'Isla', 'Provincia'];
 
 function featureFilters(f) {
   const p = f.properties;
   if (p._filters && typeof p._filters === 'object') return p._filters;
   const out = {};
-  // La unica categoria del Sheet (columna Tipologia) vive en p.sector y
-  // alimenta tanto el color de los marcadores como este filtro, pero se
-  // etiqueta "Tipología" para que coincida con la columna real del Sheet.
-  if (p.sector) out['Tipología'] = p.sector;
+  // La unica categoria del Sheet (columna Tipologia, la pregunta del
+  // formulario se llama ahora "Iniciativa") vive en p.sector y alimenta
+  // tanto el color de los marcadores como este filtro.
+  if (p.sector) out['Iniciativa'] = p.sector;
   if (p.subjectType) out['Tipología de Sujeto'] = p.subjectType;
   if (p.protagonist) out['Protagonista'] = p.protagonist;
   if (p.municipality) out['Municipio'] = p.municipality;
@@ -526,7 +526,7 @@ function initSidebar() {
       pill.type = 'button';
       pill.className = 'sector-pill';
       pill.setAttribute('aria-pressed', 'false');
-      const isSector = dim.name === 'Tipología';
+      const isSector = dim.name === 'Iniciativa';
       pill.style.setProperty('--c', isSector ? (SECTOR_COLORS[val] || '#6E6E6E') : '#534a44');
       const dot = isSector ? '<span class="dot"></span>' : '';
       pill.innerHTML = `${dot}<span>${escapeHTML(val)}</span><span class="count"></span>`;
