@@ -3,7 +3,7 @@
   "metadata": {
     "source": "google-sheet-migrado",
     "sheet_id": "1m1UVzUPzZdOBWmSFShpe8835YpWmHdWXnVtW7531tUY",
-    "row_count": 118
+    "row_count": 117
   },
   "features": [
     {
@@ -94,7 +94,7 @@
       "type": "Feature",
       "properties": {
         "id": "ffc635b1-df84-4da9-904d-10cd228df78a",
-        "name": "ASOCIACIÓN CULTURAL MERIDIANO IMAGINARIO. CICRID. MUGACA",
+        "name": "Asociación Cultural Meridiano Imaginario. CICRID. MUGACA",
         "sector": "Proyecto",
         "subjectType": "Asociación Cultural",
         "initiative": "CICRID. MUGACA",
@@ -174,7 +174,7 @@
       "type": "Feature",
       "properties": {
         "id": "85dfa34a-79d3-4276-b131-243d84157d64",
-        "name": "Asociación Para La Gestión Del Desarrollo Rural Maxorata Verde",
+        "name": "Asociación para la Gestión del Desarrollo Rural Maxorata Verde",
         "sector": "Proyecto",
         "subjectType": "Asociación de Desarrollo Local o Rural",
         "initiative": "GDR-MAXORATA",
@@ -398,7 +398,7 @@
       "type": "Feature",
       "properties": {
         "id": "446e4fa4-ad13-4e35-ab80-80cdab0d5966",
-        "name": "Fundación Canaria de apoyo a las personas con trastornos del Neurodesarrollo",
+        "name": "Fundación Canaria de Apoyo a las Personas con Trastornos del Neurodesarrollo",
         "sector": "Servicios",
         "subjectType": "Asociación o Grupo de Apoyo de Personas con Necesidades Especiales",
         "initiative": "FUNTEAC",
@@ -510,7 +510,7 @@
       "type": "Feature",
       "properties": {
         "id": "56435e58-87f9-49ec-a494-0b6b427aa03b",
-        "name": "Asociación majorera por la salud mental",
+        "name": "Asociación Majorera por la Salud Mental",
         "sector": "Proyecto",
         "subjectType": "Asociación o Grupo de Apoyo de Personas con Necesidades Especiales",
         "initiative": "ASOMASAMEN",
@@ -1253,34 +1253,6 @@
         "coordinates": [
           -13.9881798,
           28.2732649
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "8683173c-9454-42c6-ba4c-4a0c4421adc0",
-        "name": "Fuerteventura Media S.L. | Fuerteventura Televisión y Noticias Fuerteventura",
-        "sector": "Servicios",
-        "subjectType": "",
-        "initiative": "",
-        "municipality": "Puerto del Rosario",
-        "province": "Las Palmas",
-        "island": "Fuerteventura",
-        "address": "Calle Juan Domínguez Peña, 8; 35600, Puerto del Rosario, Las Palmas",
-        "phones": [
-          "633 168 995"
-        ],
-        "emails": [
-          "direccion@fuerteventuratelevision.com"
-        ],
-        "url": ""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -13.8572139,
-          28.4992161
         ]
       }
     },
@@ -2490,7 +2462,7 @@
       "type": "Feature",
       "properties": {
         "id": "86b07151-c373-4e77-a91d-4f366fbd3b3b",
-        "name": "Asociación  cultural y deportiva Tepuy",
+        "name": "Asociación  Cultural y Deportiva Tepuy",
         "sector": "Proyecto",
         "subjectType": "Asociación Cultural",
         "initiative": "TEPUY",
@@ -2630,7 +2602,7 @@
       "type": "Feature",
       "properties": {
         "id": "af3f9af8-5acc-492f-b84d-123faca4384e",
-        "name": "Asociación de madres y padres Buenaventura | CEIP del Castillo",
+        "name": "Asociación de Madres y Padres Buenaventura | CEIP del Castillo",
         "sector": "Servicios",
         "subjectType": "Asociación de Madres y Padres de Alumnos (AMPA)",
         "initiative": "AMPA Buenaventura",
@@ -3216,7 +3188,7 @@
       "type": "Feature",
       "properties": {
         "id": "c5358e1f-bc93-4949-aded-17786028dd89",
-        "name": "Stronger Together - Asociacion de extranjeros",
+        "name": "Stronger Together - Asociacion de Extranjeros",
         "sector": "Servicios",
         "subjectType": "Asociación Formal de Personas Migradas",
         "initiative": "Stronger Together - Asociacion de Extranjeros",
