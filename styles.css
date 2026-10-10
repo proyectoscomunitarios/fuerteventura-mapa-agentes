@@ -355,11 +355,6 @@ details.sector-filter[open] summary::before { transform: rotate(90deg); }
 
 .detail-content { padding: 20px 24px 32px; }
 .detail-name { font-family: 'Libre Baskerville', Georgia, serif; font-size: 19px; font-weight: 700; color: #534a44; line-height: 1.3; margin-bottom: 10px; }
-.detail-pill {
-  display: inline-block; font-size: 10px; text-transform: uppercase;
-  letter-spacing: 0.6px; padding: 4px 10px; border-radius: 100px;
-  color: #FFF; font-weight: 700; margin-bottom: 18px;
-}
 .detail-section { margin-bottom: 16px; }
 .detail-section-label {
   font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px;
@@ -368,6 +363,8 @@ details.sector-filter[open] summary::before { transform: rotate(90deg); }
 .detail-section-value {
   font-size: 13px; color: #333; line-height: 1.5;
 }
+.detail-resources { white-space: pre-line; overflow-wrap: anywhere; }
+.detail-resource-link { color: #8E6235; font-weight: 600; text-decoration: underline; }
 .detail-section-value.loading { color: #BBB; font-style: italic; }
 .detail-section-value.empty { color: #BBB; font-style: italic; }
 

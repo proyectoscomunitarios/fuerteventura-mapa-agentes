@@ -75,6 +75,10 @@ FORM_COL = {
 # datos rellenos.
 TIPOLOGIA_SUJETO_HEADERS = ["tipologia de sujeto", "ambito"]
 
+# "Recursos de interes": columna U del Sheet de respuestas ("Añada los
+# enlaces a los documentos para descargarlos..."). Por titulo, no por posicion.
+RECURSOS_HEADERS = ["enlaces a los documentos"]
+
 
 def _find_col_by_header(header, rows, keywords):
     matches = [i for i, h in enumerate(header) for kw in keywords if kw in normalize_name(h)]
@@ -115,6 +119,7 @@ def fetch_form_extra(form_sheet_id, form_gid):
         return {}
     header, rows = fetch_csv_rows(form_sheet_id, form_gid)
     tipo_col = _find_col_by_header(header, rows, TIPOLOGIA_SUJETO_HEADERS)
+    recursos_col = _find_col_by_header(header, rows, RECURSOS_HEADERS)
     if tipo_col < 0:
         print("::warning::No se encuentra la columna 'Tipología de Sujeto' / 'Ámbito' en el Sheet de respuestas "
               "(¿cambió el título de la pregunta?). Se omite ese dato para todas las entidades.")
@@ -125,7 +130,8 @@ def fetch_form_extra(form_sheet_id, form_gid):
             continue
         tipo = row[tipo_col].strip() if tipo_col >= 0 and len(row) > tipo_col else ""
         supuesto = row[FORM_COL["supuesto"]].strip() if len(row) > FORM_COL["supuesto"] else ""
-        lookup[normalize_name(nombre)] = {"subjectType": tipo, "initiative": supuesto}
+        recursos = row[recursos_col].strip() if recursos_col >= 0 and len(row) > recursos_col else ""
+        lookup[normalize_name(nombre)] = {"subjectType": tipo, "initiative": supuesto, "resources": recursos}
     return lookup
 
 
@@ -198,6 +204,7 @@ def rows_to_features(rows, form_extra=None):
             "sector": cell(row, "tipologia"),
             "subjectType": extra.get("subjectType", ""),
             "initiative": extra.get("initiative", ""),
+            "resources": extra.get("resources", ""),
             "municipality": cell(row, "municipio"),
             "province": cell(row, "provincia"),
             "island": cell(row, "isla"),

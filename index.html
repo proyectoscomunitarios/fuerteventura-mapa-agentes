@@ -849,6 +849,29 @@ function buildLinkChip(href, label) {
   return `<a class="detail-link-chip" href="${escapeHTML(clean)}" target="_blank" rel="noopener">${label}</a>`;
 }
 
+// Convierte el texto libre de "Recursos de interes" (enlaces a webs, Drive...,
+// con o sin texto identificativo alrededor) en HTML con los enlaces clicables.
+// Todo lo que no es URL se escapa; solo se enlazan http(s) validos.
+function linkifyResources(text) {
+  const src = String(text || '');
+  const re = /(https?:\/\/[^\s<>"']+|www\.[^\s<>"']+)/gi;
+  let out = '', last = 0, m;
+  while ((m = re.exec(src)) !== null) {
+    out += escapeHTML(src.slice(last, m.index));
+    let raw = m[0];
+    const trail = (raw.match(/[)\]}.,;:!?]+$/) || [''])[0];
+    raw = raw.slice(0, raw.length - trail.length);
+    const href = /^www\./i.test(raw) ? 'https://' + raw : raw;
+    let ok = false;
+    try { ok = /^https?:$/.test(new URL(href).protocol); } catch (e) {}
+    out += ok
+      ? `<a class="detail-resource-link" href="${escapeHTML(href)}" target="_blank" rel="noopener">${escapeHTML(raw)}</a>${escapeHTML(trail)}`
+      : escapeHTML(m[0]);
+    last = m.index + m[0].length;
+  }
+  return out + escapeHTML(src.slice(last));
+}
+
 function renderDetail(feature) {
   const p = feature.properties;
   const color = SECTOR_COLORS[p.sector] || '#999';
@@ -890,13 +913,14 @@ function renderDetail(feature) {
         <div class="detail-logo" style="--c:${color}">${buildLogoHTML(p)}</div>
         <h2 class="detail-name">${escapeHTML(p.name)}</h2>
       </div>
-      ${p.sector ? `<div class="detail-pill" style="background:${color}">${escapeHTML(p.sector)}</div>` : ''}
       ${p.protagonist ? `<div class="detail-section"><div class="detail-section-label">Protagonista</div><div class="detail-section-value">${escapeHTML(p.protagonist)}</div></div>` : ''}
       ${p.subjectType ? `<div class="detail-section"><div class="detail-section-label">Ámbito</div><div class="detail-section-value">${escapeHTML(p.subjectType)}</div></div>` : ''}
-      ${p.initiative ? `<div class="detail-section"><div class="detail-section-label">Programa, proyecto o servicio</div><div class="detail-section-value">${escapeHTML(p.initiative)}</div></div>` : ''}
+      ${p.sector ? `<div class="detail-section"><div class="detail-section-label">Iniciativa</div><div class="detail-section-value">${escapeHTML(p.sector)}</div></div>` : ''}
+      ${p.initiative ? `<div class="detail-section"><div class="detail-section-label">Denominación</div><div class="detail-section-value">${escapeHTML(p.initiative)}</div></div>` : ''}
       ${addressBlock}
       ${phonesBlock}
       ${emailsBlock}
+      ${p.resources ? `<div class="detail-section"><div class="detail-section-label">Recursos de interés</div><div class="detail-section-value detail-resources">${linkifyResources(p.resources)}</div></div>` : ''}
       ${links ? `<div class="detail-section"><div class="detail-section-label">Enlaces</div><div class="detail-links-row">${links}</div></div>` : ''}
       <div class="detail-actions">
         <button type="button" class="detail-action primary" id="center-btn">Centrar en el mapa</button>
