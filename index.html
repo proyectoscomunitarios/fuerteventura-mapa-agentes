@@ -230,7 +230,7 @@ const FILTER_BLOCKLIST = new Set([
 const FILTER_MAX_CARDINALITY = 40;
 // En FP la dimensión que dispara vuelo de cámara es el Municipio.
 const FLYTO_DIM = 'Municipio';
-const FILTER_DIM_ORDER = ['Municipio', 'Iniciativa', 'Tipología de Sujeto', 'Protagonista', 'Isla', 'Provincia'];
+const FILTER_DIM_ORDER = ['Ámbito', 'Municipio', 'Iniciativa', 'Protagonista', 'Isla', 'Provincia'];
 
 function featureFilters(f) {
   const p = f.properties;
@@ -240,7 +240,7 @@ function featureFilters(f) {
   // formulario se llama ahora "Iniciativa") vive en p.sector y alimenta
   // tanto el color de los marcadores como este filtro.
   if (p.sector) out['Iniciativa'] = p.sector;
-  if (p.subjectType) out['Tipología de Sujeto'] = p.subjectType;
+  if (p.subjectType) out['Ámbito'] = p.subjectType;
   if (p.protagonist) out['Protagonista'] = p.protagonist;
   if (p.municipality) out['Municipio'] = p.municipality;
   if (p.province) out['Provincia'] = p.province;
@@ -251,7 +251,7 @@ function featureFilters(f) {
 // Dimensiones que se muestran como desplegable de casillas (multi-select)
 // en vez de pastillas — para categorías con muchos valores y nombres largos
 // donde las pastillas no caben bien.
-const DROPDOWN_FILTER_DIMS = new Set(['Tipología de Sujeto']);
+const DROPDOWN_FILTER_DIMS = new Set(['Ámbito']);
 // Funciones de reseteo de cada desplegable renderizado, para que
 // clearAllFilters() tambien las limpie visualmente.
 let dropdownFilterResetters = [];
@@ -505,14 +505,15 @@ function initSidebar() {
   container.innerHTML = '';
   dropdownFilterResetters = [];
   dropdownFilterSyncers = [];
-  filterDims.forEach((dim, di) => {
+  let pillFilterCount = 0;
+  filterDims.forEach(dim => {
     if (DROPDOWN_FILTER_DIMS.has(dim.name)) {
       container.appendChild(renderDropdownFilter(dim));
       return;
     }
     const det = document.createElement('details');
     det.className = 'sector-filter';
-    if (di < 2) det.open = true;
+    if (pillFilterCount++ < 2) det.open = true;
     const summary = document.createElement('summary');
     summary.textContent = 'Filtrar por ' + dim.name.toLowerCase();
     det.appendChild(summary);
@@ -891,7 +892,7 @@ function renderDetail(feature) {
       </div>
       ${p.sector ? `<div class="detail-pill" style="background:${color}">${escapeHTML(p.sector)}</div>` : ''}
       ${p.protagonist ? `<div class="detail-section"><div class="detail-section-label">Protagonista</div><div class="detail-section-value">${escapeHTML(p.protagonist)}</div></div>` : ''}
-      ${p.subjectType ? `<div class="detail-section"><div class="detail-section-label">Tipología de sujeto</div><div class="detail-section-value">${escapeHTML(p.subjectType)}</div></div>` : ''}
+      ${p.subjectType ? `<div class="detail-section"><div class="detail-section-label">Ámbito</div><div class="detail-section-value">${escapeHTML(p.subjectType)}</div></div>` : ''}
       ${p.initiative ? `<div class="detail-section"><div class="detail-section-label">Programa, proyecto o servicio</div><div class="detail-section-value">${escapeHTML(p.initiative)}</div></div>` : ''}
       ${addressBlock}
       ${phonesBlock}
