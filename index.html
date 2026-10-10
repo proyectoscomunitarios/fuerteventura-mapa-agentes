@@ -129,8 +129,7 @@ const SECTOR_COLORS = {
   'Servicios': '#534a44',
   'Proyecto': '#8E6235',
   'Programa': '#6B7042',
-  'Plan': '#94582F',
-  'Sin clasificar': '#6E6E6E'
+  'Plan': '#94582F'
 };
 
 function normalize(s) {
@@ -374,9 +373,10 @@ async function load() {
 
   GEOJSON = { type: 'FeatureCollection', features: valid };
 
+  // Si la Iniciativa viene vacia se deja vacia: no se muestra etiqueta ni
+  // cuenta como categoria en el filtro (la jefa no quiere "Sin clasificar").
   GEOJSON.features.forEach(f => {
-    let s = (f.properties.sector || '').trim();
-    f.properties.sector = s || 'Sin clasificar';
+    f.properties.sector = (f.properties.sector || '').trim();
   });
 
   zonesData = {
@@ -730,7 +730,7 @@ function renderEntityList(features) {
     card.className = 'entity-card' + (p.id === selectedEntityId ? ' selected' : '');
     card.dataset.id = p.id;
     if (p.id === selectedEntityId) card.setAttribute('aria-pressed', 'true');
-    card.setAttribute('aria-label', `${p.name}, ${p.sector}`);
+    card.setAttribute('aria-label', p.sector ? `${p.name}, ${p.sector}` : p.name);
     card.style.setProperty('--c', color);
     const loc = [p.municipality, p.province].filter(Boolean).join(', ') || p.island || p.sector;
     card.innerHTML = `
@@ -739,7 +739,7 @@ function renderEntityList(features) {
       <div class="card-body">
         <div class="name">${escapeHTML(p.name)}</div>
         <div class="location">${escapeHTML(loc)}</div>
-        ${(p.municipality || p.island) ? `<div class="sector-label">${escapeHTML(p.sector)}</div>` : ''}
+        ${(p.sector && (p.municipality || p.island)) ? `<div class="sector-label">${escapeHTML(p.sector)}</div>` : ''}
       </div>
     `;
     attachLogoFallbacks(card);
@@ -889,7 +889,7 @@ function renderDetail(feature) {
         <div class="detail-logo" style="--c:${color}">${buildLogoHTML(p)}</div>
         <h2 class="detail-name">${escapeHTML(p.name)}</h2>
       </div>
-      <div class="detail-pill" style="background:${color}">${escapeHTML(p.sector)}</div>
+      ${p.sector ? `<div class="detail-pill" style="background:${color}">${escapeHTML(p.sector)}</div>` : ''}
       ${p.protagonist ? `<div class="detail-section"><div class="detail-section-label">Protagonista</div><div class="detail-section-value">${escapeHTML(p.protagonist)}</div></div>` : ''}
       ${p.subjectType ? `<div class="detail-section"><div class="detail-section-label">Tipología de sujeto</div><div class="detail-section-value">${escapeHTML(p.subjectType)}</div></div>` : ''}
       ${p.initiative ? `<div class="detail-section"><div class="detail-section-label">Programa, proyecto o servicio</div><div class="detail-section-value">${escapeHTML(p.initiative)}</div></div>` : ''}
