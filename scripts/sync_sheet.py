@@ -60,39 +60,17 @@ COL = {
 
 # Columnas del Sheet de respuestas del formulario (bruto, el de la jefa)
 # que necesitamos aparte porque el Apps Script no las copia al migrado.
-# "nombre" y "supuesto" van fijas por posicion (estables hasta ahora).
+# Se identifican por POSICION (letra de columna), no por titulo: los titulos
+# de las preguntas cambian a menudo. Si alguien inserta o borra una columna
+# por delante de estas, hay que actualizar aqui el indice (A=0, B=1, ...).
+# Cada ejecucion escribe en el registro que titulo hay en cada posicion
+# para que un cambio se note enseguida.
 FORM_COL = {
-    "nombre": 2,
-    "supuesto": 4,
+    "nombre": 2,             # C  Nombre de la entidad
+    "supuesto": 4,           # E  Denominacion (nombre del programa/proyecto/servicio)
+    "recursos": 20,          # U  Recursos de interes (enlaces a documentos)
+    "tipologia_sujeto": 22,  # W  Ambito
 }
-
-# "Tipología de Sujeto" SI se ha movido de posicion al menos una vez (se
-# renombro a "Ámbito" y una pregunta nueva del formulario la desplazo de
-# la W a la X). Para no depender de un numero de columna fijo, se busca
-# por el titulo de la cabecera -- probando los nombres antiguo y nuevo --
-# y si hay varias columnas con ese mismo titulo (p.ej. una pregunta
-# duplicada sin borrar todavia), se queda con la que de verdad tiene
-# datos rellenos.
-TIPOLOGIA_SUJETO_HEADERS = ["tipologia de sujeto", "ambito"]
-
-# "Recursos de interes": columna U del Sheet de respuestas ("Añada los
-# enlaces a los documentos para descargarlos..."). Por titulo, no por posicion.
-RECURSOS_HEADERS = ["enlaces a los documentos"]
-
-
-def _find_col_by_header(header, rows, keywords):
-    # Primero titulo EXACTO (asi "Ambito" no se confunde con "Ambito de
-    # actuacion", otra pregunta distinta); solo si no hay, por coincidencia parcial.
-    matches = [i for i, h in enumerate(header) for kw in keywords if kw == normalize_name(h)]
-    if not matches:
-        matches = [i for i, h in enumerate(header) for kw in keywords if kw in normalize_name(h)]
-    if not matches:
-        return -1
-    if len(matches) == 1:
-        return matches[0]
-    # Varias columnas con el mismo titulo: la que tenga mas celdas rellenas.
-    counts = {i: sum(1 for r in rows if len(r) > i and r[i].strip()) for i in matches}
-    return max(counts, key=counts.get)
 
 # Fuerteventura + margen. El mapa es SOLO de esta isla, aunque el Sheet
 # pueda incluir en el futuro alguna entidad con sede en otra isla.
@@ -122,19 +100,22 @@ def fetch_form_extra(form_sheet_id, form_gid):
         print("::warning::Faltan FORM_SHEET_ID/FORM_SHEET_GID, se omiten Tipología de Sujeto y Programa/Proyecto/Servicio.")
         return {}
     header, rows = fetch_csv_rows(form_sheet_id, form_gid)
-    tipo_col = _find_col_by_header(header, rows, TIPOLOGIA_SUJETO_HEADERS)
-    recursos_col = _find_col_by_header(header, rows, RECURSOS_HEADERS)
-    if tipo_col < 0:
-        print("::warning::No se encuentra la columna 'Tipología de Sujeto' / 'Ámbito' en el Sheet de respuestas "
-              "(¿cambió el título de la pregunta?). Se omite ese dato para todas las entidades.")
+    for clave, i in FORM_COL.items():
+        titulo = header[i] if i < len(header) else "(no existe)"
+        print(f"::notice::Respuestas, columna {chr(65 + i)} ({clave}): {titulo!r}")
+
+    def val(row, clave):
+        i = FORM_COL[clave]
+        return row[i].strip() if len(row) > i else ""
+
     lookup = {}
     for row in rows:
-        nombre = row[FORM_COL["nombre"]].strip() if len(row) > FORM_COL["nombre"] else ""
+        nombre = val(row, "nombre")
         if not nombre:
             continue
-        tipo = row[tipo_col].strip() if tipo_col >= 0 and len(row) > tipo_col else ""
-        supuesto = row[FORM_COL["supuesto"]].strip() if len(row) > FORM_COL["supuesto"] else ""
-        recursos = row[recursos_col].strip() if recursos_col >= 0 and len(row) > recursos_col else ""
+        tipo = val(row, "tipologia_sujeto")
+        supuesto = val(row, "supuesto")
+        recursos = val(row, "recursos")
         lookup[normalize_name(nombre)] = {"subjectType": tipo, "initiative": supuesto, "resources": recursos}
     return lookup
 
