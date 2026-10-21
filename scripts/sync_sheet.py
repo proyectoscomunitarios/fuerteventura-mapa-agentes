@@ -81,7 +81,11 @@ RECURSOS_HEADERS = ["enlaces a los documentos"]
 
 
 def _find_col_by_header(header, rows, keywords):
-    matches = [i for i, h in enumerate(header) for kw in keywords if kw in normalize_name(h)]
+    # Primero titulo EXACTO (asi "Ambito" no se confunde con "Ambito de
+    # actuacion", otra pregunta distinta); solo si no hay, por coincidencia parcial.
+    matches = [i for i, h in enumerate(header) for kw in keywords if kw == normalize_name(h)]
+    if not matches:
+        matches = [i for i, h in enumerate(header) for kw in keywords if kw in normalize_name(h)]
     if not matches:
         return -1
     if len(matches) == 1:
