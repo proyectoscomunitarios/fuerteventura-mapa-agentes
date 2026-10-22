@@ -3,7 +3,7 @@
   "metadata": {
     "source": "google-sheet-migrado",
     "sheet_id": "1m1UVzUPzZdOBWmSFShpe8835YpWmHdWXnVtW7531tUY",
-    "row_count": 117
+    "row_count": 116
   },
   "features": [
     {
@@ -70,8 +70,8 @@
         "id": "a552cab7-112b-4b89-bbd5-b1e5bf19f85f",
         "name": "Federación de Asociaciones de Mujeres Arena y Laurisilva",
         "sector": "Proyecto",
-        "subjectType": "Organización No Gubernamental (ONG)",
-        "initiative": "Centro de Sensibilización y Promoción para la Igualdad en Fuerteventura",
+        "subjectType": "Asociación formal de Mujeres",
+        "initiative": "Centro Especializado de Atención Integral contra  las Violencias Machistas en Fuerteventura (Centro de Atención Integral a Victimas de Violencia de género y/o discriminación por razón de Género).",
         "resources": "",
         "municipality": "Puerto del Rosario",
         "province": "Las Palmas",
@@ -873,35 +873,6 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "22be9f98-965f-4dc5-bc2a-283dfee5d426",
-        "name": "Grupo Ornitológico Alcaidón de Canarias",
-        "sector": "Proyecto",
-        "subjectType": "Asociación o Grupo Ecologista",
-        "initiative": "Alcaidón",
-        "resources": "",
-        "municipality": "La Oliva",
-        "province": "Las Palmas",
-        "island": "Fuerteventura",
-        "address": "Calle Francisco Bordón Mendez, 40; 35640, La Oliva, Las Palmas",
-        "phones": [
-          "635 850 671"
-        ],
-        "emails": [
-          "grupoalcaidon@gmail.com"
-        ],
-        "url": ""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -13.9257048,
-          28.6121144
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "id": "26922d99-4d35-40ac-ace6-8fa2b1a35fa3",
         "name": "Asociación Fuerteventura Seals Airsoft",
         "sector": "Servicios",
@@ -1423,8 +1394,8 @@
         "id": "e68b0cee-b1f8-449e-9e9b-b6df7cd26e99",
         "name": "Asociación musical \"Charanga a Contratempo\"",
         "sector": "Proyecto",
-        "subjectType": "Asociación cultural",
-        "initiative": "Charanga a Contratenpo",
+        "subjectType": "",
+        "initiative": "",
         "resources": "",
         "municipality": "Betancuria",
         "province": "Las Palmas",
@@ -1992,35 +1963,6 @@
         "coordinates": [
           -13.96585104,
           28.49175228
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "46496f9e-2822-466b-9992-a4347d5b120d",
-        "name": "Asociación Socio Cultural Montaña del Cardón",
-        "sector": "Servicios",
-        "subjectType": "Asociación Cultural",
-        "initiative": "Montaña del Cardón",
-        "resources": "",
-        "municipality": "Pájara",
-        "province": "Las Palmas",
-        "island": "Fuerteventura",
-        "address": "Calle Vicente Soto, 8; 35628, Pájara, Las Palmas",
-        "phones": [
-          "699 291 896"
-        ],
-        "emails": [
-          "gonzalezmoralesj@gmail.com"
-        ],
-        "url": ""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -14.1081189,
-          28.35
         ]
       }
     },
@@ -2668,8 +2610,8 @@
         "id": "27da211d-8084-467c-b1eb-daee165de46a",
         "name": "Asociación Senegalesa en Fuerteventura",
         "sector": "Servicios",
-        "subjectType": "Asociación Formal de Personas Migradas",
-        "initiative": "ASEF",
+        "subjectType": "",
+        "initiative": "",
         "resources": "",
         "municipality": "Puerto del Rosario",
         "province": "Las Palmas",
@@ -3382,6 +3324,35 @@
         "coordinates": [
           -13.8525488,
           28.5035493
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "21d0ecee-30e6-4a55-b6e2-278a8973ebd2",
+        "name": "Asociación Socio Cultural de Vecinos(as) Montaña de Cardón",
+        "sector": "Servicio",
+        "subjectType": "Asociación de vecinos y vecinas",
+        "initiative": "",
+        "resources": "Ninguno",
+        "municipality": "Pájara",
+        "province": "Las Palmas",
+        "island": "Fuerteventura",
+        "address": "Calle Vicente Soto, 8; 35628, Pájara, Las Palmas",
+        "phones": [
+          "699 291 896"
+        ],
+        "emails": [
+          "gonzalezmoralesj@gmail.com"
+        ],
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -14.1081189,
+          28.3508903
         ]
       }
     }
