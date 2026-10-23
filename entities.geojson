@@ -507,7 +507,7 @@
         "municipality": "Puerto del Rosario",
         "province": "Las Palmas",
         "island": "Fuerteventura",
-        "address": "Calle Presidente Hormiga, 3; 35600, Puerto del Rosario, Las Palmas",
+        "address": "Calle Velázquez, 17, local derecho, Puerto del Rosario, 35600. Fuerteventura",
         "phones": [
           "621 239 866"
         ],
@@ -519,8 +519,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -14.0560801,
-          28.4252279
+          -13.869599,
+          28.499878
         ]
       }
     },
@@ -1223,7 +1223,7 @@
         "subjectType": "Centro de Enseñanza Pública (artísticas, música, idiomas, profesional, etc.)",
         "initiative": "EA Fuerteventura",
         "resources": "",
-        "municipality": "Pájara",
+        "municipality": "Puerto del Rosario",
         "province": "Las Palmas",
         "island": "Fuerteventura",
         "address": "Carretera Los Estancos, s/n (Antiguo Aeropuerto de Los Estancos, Apartado de Correos 148); 35612, Pájara, Las Palmas",
@@ -1385,35 +1385,6 @@
         "coordinates": [
           -13.86995,
           28.73942
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "e68b0cee-b1f8-449e-9e9b-b6df7cd26e99",
-        "name": "Asociación musical \"Charanga a Contratempo\"",
-        "sector": "Proyecto",
-        "subjectType": "",
-        "initiative": "",
-        "resources": "",
-        "municipality": "Betancuria",
-        "province": "Las Palmas",
-        "island": "Fuerteventura",
-        "address": "Lugar Ampuyenta 4ºC; 35637, Betancuria, Las Palmas",
-        "phones": [
-          "676 043 619"
-        ],
-        "emails": [
-          "djsuarezramos@gmail.com"
-        ],
-        "url": ""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -13.9934506,
-          28.4644479
         ]
       }
     },
@@ -2607,35 +2578,6 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "27da211d-8084-467c-b1eb-daee165de46a",
-        "name": "Asociación Senegalesa en Fuerteventura",
-        "sector": "Servicios",
-        "subjectType": "",
-        "initiative": "",
-        "resources": "",
-        "municipality": "Puerto del Rosario",
-        "province": "Las Palmas",
-        "island": "Fuerteventura",
-        "address": "Calle Tabaiba, 44-A; 35600, Puerto del Rosario, Las Palmas",
-        "phones": [
-          "645 293 377"
-        ],
-        "emails": [
-          "asefuert@gmail.com"
-        ],
-        "url": ""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -13.8714338,
-          28.470408
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "id": "af3f9af8-5acc-492f-b84d-123faca4384e",
         "name": "Asociación de Madres y Padres Buenaventura | CEIP del Castillo",
         "sector": "Servicios",
@@ -3353,6 +3295,64 @@
         "coordinates": [
           -14.1081189,
           28.3508903
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "8a6b1fe7-cd7e-4f02-9203-a8006c32e0f1",
+        "name": "Asociación Musical \"Charanga Acontratiempo\"",
+        "sector": "Servicio",
+        "subjectType": "Asociación Cultural",
+        "initiative": "Charanga musical viento-percusión",
+        "resources": "FACEBOOK - INSTAGRAM:  charanga a contratiempo",
+        "municipality": "Antigua",
+        "province": "Las Palmas",
+        "island": "Fuerteventura",
+        "address": "Lugar Maninubre, 8C. Antigua.",
+        "phones": [
+          "676043619"
+        ],
+        "emails": [
+          "charanga.acontratiempo@gmail.com"
+        ],
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -14.022639,
+          28.4236787
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "3b7565be-4f44-49d1-a535-2e42146fd18b",
+        "name": "Asociación Senegalesa en Fuerteventura- ASEF",
+        "sector": "Programa",
+        "subjectType": "Asociación formal de Personas Migradas",
+        "initiative": "",
+        "resources": "",
+        "municipality": "Puerto del Rosario",
+        "province": "Las Palmas",
+        "island": "Fuerteventura",
+        "address": "Calle Tabaiba 44 A CP 35600 Puerto del Rosario",
+        "phones": [
+          "645293377"
+        ],
+        "emails": [
+          "asefuert@gmail.com"
+        ],
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -13.8714338,
+          28.470408
         ]
       }
     }
