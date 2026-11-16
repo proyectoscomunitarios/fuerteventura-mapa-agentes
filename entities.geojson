@@ -123,7 +123,7 @@
       "properties": {
         "id": "88a6df80-53fb-40e0-9ef3-2f9a4bbb9e77",
         "name": "Asociación de Vecinos Cafucast | Caleta de Fuste-Castillo",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación de Vecinos y Vecinas",
         "initiative": "Cafucast",
         "resources": "",
@@ -152,7 +152,7 @@
       "properties": {
         "id": "f039e1dc-86ef-4ed4-a81a-4735a77b7dd8",
         "name": "Asociación de Vecinos de Costa de Antigua",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación de Vecinos y Vecinas",
         "initiative": "Asociación de Vecinos de Costa de Antigua",
         "resources": "",
@@ -210,7 +210,7 @@
       "properties": {
         "id": "b40dfaad-3ec0-4fc8-b20b-8fb25d3a5bfc",
         "name": "Centro de Educación de Infantil y Primaria Francisca Pérez",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Infantil",
         "initiative": "CEIP Francisca Pérez",
         "resources": "",
@@ -268,7 +268,7 @@
       "properties": {
         "id": "c8e31658-5f8a-4ccd-83e4-26e55d3b3f73",
         "name": "Asociación Cultural Raíz del Pueblo",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Cultural",
         "initiative": "Raíz del Pueblo",
         "resources": "",
@@ -297,7 +297,7 @@
       "properties": {
         "id": "facfe1cd-b348-4d30-a3f5-71ce218a3a2f",
         "name": "Asociación de Vecinos Buenos Amigos Casillas del Ángel",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación de Vecinos y Vecinas",
         "initiative": "Asociación de Vecinos Buenos Amigos",
         "resources": "",
@@ -413,7 +413,7 @@
       "properties": {
         "id": "446e4fa4-ad13-4e35-ab80-80cdab0d5966",
         "name": "Fundación Canaria de Apoyo a las Personas con Trastornos del Neurodesarrollo",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación o Grupo de Apoyo de Personas con Necesidades Especiales",
         "initiative": "FUNTEAC",
         "resources": "",
@@ -442,7 +442,7 @@
       "properties": {
         "id": "defa16a6-3f0c-4098-b236-b90ff9aa1a82",
         "name": "Asociación Contra el Cáncer de Mama Metastásico Fuerteventura",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación o Grupo de Apoyo de Personas con Necesidades Especiales",
         "initiative": "ACCMMF",
         "resources": "",
@@ -500,7 +500,7 @@
       "properties": {
         "id": "58c04c6f-4b87-45bc-879a-c00cdba5f7df",
         "name": "Fundación Canaria Pequeño Valiente",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación o Grupo de Apoyo de Personas con Necesidades Especiales",
         "initiative": "Pequeño Valiente",
         "resources": "",
@@ -558,7 +558,7 @@
       "properties": {
         "id": "87bd6d73-d765-472b-89a6-3a734dba0d0b",
         "name": "Obra Social La Milagrosa, Hijas de la Caridad | Acción Social Vicenciana",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Entidad o asociación religiosa",
         "initiative": "Obra Social La Miliagrosa",
         "resources": "",
@@ -616,7 +616,7 @@
       "properties": {
         "id": "486ba53f-c563-4156-8da2-ffb78934b9d7",
         "name": "Asociación Fuertevida Parkinson No Limits",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación o Grupo de Apoyo de Personas con Necesidades Especiales",
         "initiative": "Fuertevida",
         "resources": "",
@@ -645,7 +645,7 @@
       "properties": {
         "id": "44cedbcd-3839-4123-9f77-2c36d2f00c76",
         "name": "Asociación Provincial de Esclerosis Múltiple",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación o Grupo de Apoyo de Personas con Necesidades Especiales",
         "initiative": "APEM",
         "resources": "",
@@ -732,7 +732,7 @@
       "properties": {
         "id": "cd2afc30-0b01-4801-9a23-5a09aaf5d04a",
         "name": "Asociación Comunidades de Propietarios de Antigua",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Grupo de Ayuda Mutua a la Comunidad",
         "initiative": "ACPA",
         "resources": "",
@@ -817,7 +817,7 @@
       "properties": {
         "id": "7184b3dd-9635-4ddc-be0f-4c08911c55dd",
         "name": "Asociación de Madres y Padres Escanfraga | CEIP Villaverde",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación de Vecinos y Vecinas",
         "initiative": "Escanfraga",
         "resources": "",
@@ -846,7 +846,7 @@
       "properties": {
         "id": "07d6631a-4b48-4056-b9dc-d1d21a724d82",
         "name": "Club Deportivo de Tenis Smash",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Deportiva",
         "initiative": "Smash",
         "resources": "",
@@ -875,7 +875,7 @@
       "properties": {
         "id": "26922d99-4d35-40ac-ace6-8fa2b1a35fa3",
         "name": "Asociación Fuerteventura Seals Airsoft",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Deportiva",
         "initiative": "Seals Airsoft",
         "resources": "",
@@ -904,7 +904,7 @@
       "properties": {
         "id": "083f8d08-e8ce-40a3-a3bb-fe20e4a97e1a",
         "name": "Asociación de Familias del Alumnado San Buenaventura | IES Puerto del Rosario",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación de Madres y Padres de Alumnos (AMPA)",
         "initiative": "",
         "resources": "",
@@ -931,7 +931,7 @@
       "properties": {
         "id": "d6b8989b-0f9d-4f18-a9a4-f60298dc96ac",
         "name": "Asociación de Madres y Padres El Pispo | CEIP Domingo Juan Manrique",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación de Madres y Padres de Alumnos (AMPA)",
         "initiative": "El Pispo",
         "resources": "",
@@ -989,7 +989,7 @@
       "properties": {
         "id": "d5948b9b-dcd6-4d19-9de4-6e96bc8b4c75",
         "name": "Asociación de Madres y Padres La Avutarda | CEIP La Hubara",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación de Madres y Padres de Alumnos (AMPA)",
         "initiative": "La Avutarda",
         "resources": "",
@@ -1045,7 +1045,7 @@
       "properties": {
         "id": "fea218a9-5465-4c2d-ad36-ea2059595443",
         "name": "Club Deportivo Herbania",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Deportiva",
         "initiative": "El Herbania",
         "resources": "",
@@ -1074,7 +1074,7 @@
       "properties": {
         "id": "cbbd75aa-60dd-44cf-adbd-67e0d43ff315",
         "name": "Centro de Educación Infantil y Primaria Costa Calma",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Infantil y Primaria",
         "initiative": "CEIP Costa Calma",
         "resources": "",
@@ -1103,7 +1103,7 @@
       "properties": {
         "id": "f4be8ee2-0e29-47c6-a0f5-f2c21cfa9311",
         "name": "Centro de Educación Infantil y Primaria Morro Jable I",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Infantil y Primaria",
         "initiative": "CEIP Morro Jable I",
         "resources": "",
@@ -1132,7 +1132,7 @@
       "properties": {
         "id": "807ab1d0-fac5-46d2-ba44-a2983c3e72f4",
         "name": "Centro de Educación Infantil y Primaria Pájara",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Infantil y Primaria",
         "initiative": "CEIP Pájara",
         "resources": "",
@@ -1161,7 +1161,7 @@
       "properties": {
         "id": "30bfb55d-52b1-460c-a5fc-c9d32903c108",
         "name": "Centro Integrado de Formación Profesional Morro Jable",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Integrado de Formación Profesional",
         "initiative": "CIFP Morro Jable",
         "resources": "",
@@ -1190,7 +1190,7 @@
       "properties": {
         "id": "e4550105-2403-4d4a-8ca7-1bbfd6719702",
         "name": "Instituto de Educación Secundaria Jandía",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Secundaria y Bachillerato",
         "initiative": "IES Jandia",
         "resources": "",
@@ -1219,7 +1219,7 @@
       "properties": {
         "id": "80f72e71-7eaf-42a4-9484-e9a4d7f9d3b6",
         "name": "Escuela de Arte de Fuerteventura",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro de Enseñanza Pública (artísticas, música, idiomas, profesional, etc.)",
         "initiative": "EA Fuerteventura",
         "resources": "",
@@ -1277,7 +1277,7 @@
       "properties": {
         "id": "67856983-0ec8-4214-87bd-762242f57fc5",
         "name": "Asociación Arena para la recuperación y equilibrio neurológico en armonía",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación o Grupo de Apoyo de Personas con Necesidades Especiales",
         "initiative": "Arena",
         "resources": "",
@@ -1306,7 +1306,7 @@
       "properties": {
         "id": "93da8336-1c0d-43fa-b947-3be6e20b6598",
         "name": "Centro de Educación Infantil y Primaria Tarajalejo",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Infantil y Primaria",
         "initiative": "CEIP Tarajalejo",
         "resources": "",
@@ -1335,7 +1335,7 @@
       "properties": {
         "id": "e8289144-5d4c-48ca-8197-681932a80be1",
         "name": "Centro de Educación Infantil y Primaria Tuineje",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Infantil y Primaria",
         "initiative": "CEIP Tuineje",
         "resources": "",
@@ -1364,7 +1364,7 @@
       "properties": {
         "id": "b469efac-d28d-4b55-8f1a-65f5140753d2",
         "name": "Asociación de Vecinos Por Corralejo-Avecor",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación de Vecinos y Vecinas",
         "initiative": "Avecor",
         "resources": "",
@@ -1422,7 +1422,7 @@
       "properties": {
         "id": "5a9ea4f1-eb19-45da-b68a-95a47334e7fc",
         "name": "Asociación de Ganaderos del Mal Nombre",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Agrícola- Ganadera",
         "initiative": "Asociación de Ganaderos del Mal Nombre",
         "resources": "",
@@ -1451,7 +1451,7 @@
       "properties": {
         "id": "d5931da4-db36-48eb-be0a-8654d1bb2f4d",
         "name": "Asociación de Madres y Padres Bajo Montaña | CEIP Antoñito El Farero",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación de Madres y Padres de Alumnos (AMPA)",
         "initiative": "AMPA Bajo Montaña",
         "resources": "",
@@ -1565,7 +1565,7 @@
       "properties": {
         "id": "6ff7b689-a427-405b-a2a9-1e5b7b508beb",
         "name": "Centro de Educación Infantil y Primaria Pablo Neruda",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Infantil y Primaria",
         "initiative": "CEIP Pablo Neruda",
         "resources": "",
@@ -1594,7 +1594,7 @@
       "properties": {
         "id": "516d9931-0ece-480c-86c0-6c2283d7b85a",
         "name": "Centro de Educación Infantil y Primaria Gumersindo Martell",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Infantil y Primaria",
         "initiative": "CEIP Gumersindo Martel",
         "resources": "",
@@ -1623,7 +1623,7 @@
       "properties": {
         "id": "adadaa4b-795d-4b41-bffa-54283675c9cf",
         "name": "Instituto de Educación Secundaria La Oliva",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Secundaria y Bachillerato",
         "initiative": "IES La Oliva",
         "resources": "",
@@ -1652,7 +1652,7 @@
       "properties": {
         "id": "7f1890a7-e9a3-4cf8-ba8f-fa5d2e45d717",
         "name": "Consejería Territorial de Educación del Gobierno de Canarias en Fuerteventura",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Administración Autonómica",
         "initiative": "Educación Fuerteventura",
         "resources": "",
@@ -1710,7 +1710,7 @@
       "properties": {
         "id": "25185c32-5c33-4761-94cd-93e323174ee0",
         "name": "Asociación de Productores Agroalimentarios de Fuerteventura | APAF",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Agrícola- Ganadera",
         "initiative": "APAF",
         "resources": "",
@@ -1739,7 +1739,7 @@
       "properties": {
         "id": "014dba1a-775d-4b0d-8f1b-921f7f56864b",
         "name": "Asociación de Empresarios de Puerto del Rosario",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Empresarial",
         "initiative": "Asociación de Empresarios de Puerto del Rosario",
         "resources": "",
@@ -1768,7 +1768,7 @@
       "properties": {
         "id": "6b2770b6-9ff0-4b68-9ba6-261a30df5a13",
         "name": "ONG Clean Ocean Project",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación o Grupo Ecologista",
         "initiative": "Clean Ocean Project",
         "resources": "",
@@ -1797,7 +1797,7 @@
       "properties": {
         "id": "fdb36bf8-111e-48f0-8577-b758a48e3e98",
         "name": "Biblioteca Municipal de Puerto del Rosario",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Biblioteca",
         "initiative": "Biblioteca de Puerto del Rosario",
         "resources": "",
@@ -1826,7 +1826,7 @@
       "properties": {
         "id": "7a3f9faa-526f-4a01-b459-81ad19f73c5b",
         "name": "Club San Crispín",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Deportiva",
         "initiative": "San Crispín",
         "resources": "",
@@ -1855,7 +1855,7 @@
       "properties": {
         "id": "44658f84-8d4e-4402-b284-7025e3458a78",
         "name": "Asociación Juvenil Los Alisios del Sur",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Formal de Jóvenes",
         "initiative": "Los Alisios del Sur",
         "resources": "",
@@ -1884,7 +1884,7 @@
       "properties": {
         "id": "4f826fcf-5040-482d-b9c3-d64194df1253",
         "name": "Asociación Sociocultural y Deportiva Esencia Fuerteventura",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Cultural",
         "initiative": "Esencia Fuerteventura",
         "resources": "",
@@ -1913,7 +1913,7 @@
       "properties": {
         "id": "26cf04fa-c2b3-4b80-8d2d-1f7c084ab3bf",
         "name": "Centro de Educación Infantil y Primaria Casillas del Ángel",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Infantil y Primaria",
         "initiative": "CEIP Casillas del Ángel",
         "resources": "",
@@ -1971,7 +1971,7 @@
       "properties": {
         "id": "813b4ee5-0676-477f-b301-a3caf790702c",
         "name": "Asociación Social Sahara Fuerte",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Social",
         "initiative": "Sahara Fuerte",
         "resources": "",
@@ -2000,7 +2000,7 @@
       "properties": {
         "id": "79edb562-6a6d-4217-986e-2e3d7b59aefb",
         "name": "Asociación Sociocultural de Mujeres Mauritanas DIMBE",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Formal de Mujeres",
         "initiative": "DIMBE",
         "resources": "",
@@ -2058,7 +2058,7 @@
       "properties": {
         "id": "caa3213c-95b4-4876-bd94-866833dc5d42",
         "name": "Colegio de Educación Infantil y Primaria Tindaya",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Infantil y Primaria",
         "initiative": "CEIP TIndaya",
         "resources": "",
@@ -2087,7 +2087,7 @@
       "properties": {
         "id": "f87c0468-dba1-4134-a4f9-9f61e159b642",
         "name": "Club Deportivo Saque y Club Deportivo Saque y Volea",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Deportiva",
         "initiative": "Saque y Volea",
         "resources": "",
@@ -2116,7 +2116,7 @@
       "properties": {
         "id": "394087ef-2cf5-4657-9f73-b618eef6eea7",
         "name": "Asociación Isla Maxorata Club Deportivo Voleibol",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Deportiva",
         "initiative": "CD Isla Maxorata",
         "resources": "",
@@ -2145,7 +2145,7 @@
       "properties": {
         "id": "497a2a5f-31ad-4604-b222-92b601f9e547",
         "name": "Escuela Insular de Porteros de Fútbol Isla de Fuerteventura",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Deportiva",
         "initiative": "Escuela de Porteros Isla de Fuerteventura",
         "resources": "",
@@ -2174,7 +2174,7 @@
       "properties": {
         "id": "729747c6-8aad-456a-959c-f4f660112f79",
         "name": "Asociación de Fuerteventura de Familias con Alzheimer y Otras Demencias | AFFA",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación o Grupo de Apoyo de Personas con Necesidades Especiales",
         "initiative": "AFFA",
         "resources": "",
@@ -2203,7 +2203,7 @@
       "properties": {
         "id": "aa2b12b3-3d01-49a6-b735-62c588526b4a",
         "name": "Centro de Educación Infantil y Primaria de Tefía",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Infantil y Primaria",
         "initiative": "CEIP Tefía",
         "resources": "",
@@ -2290,7 +2290,7 @@
       "properties": {
         "id": "28f3364e-9251-4365-80c2-3d6f4455e413",
         "name": "Asociación Play and Train",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Deportiva",
         "initiative": "Play and Train",
         "resources": "",
@@ -2377,7 +2377,7 @@
       "properties": {
         "id": "5af6d957-9e60-4301-b8d2-5273bd00f73d",
         "name": "Asociación de Vecinos El Pajerito de los Molinos",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación de Vecinos y Vecinas",
         "initiative": "El Pajerito de los Molinos",
         "resources": "",
@@ -2406,7 +2406,7 @@
       "properties": {
         "id": "3d1a795d-e3d2-4848-94d5-cd96dcf05987",
         "name": "Instituto de Educación Secundaria Corralejo",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Secundaria y Bachillerato",
         "initiative": "IES Corralejo",
         "resources": "",
@@ -2522,7 +2522,7 @@
       "properties": {
         "id": "f9c5f861-b5d3-4236-9109-d5cb98c7df4a",
         "name": "Centro de Educación Infantil y Primaria Tesegueraje",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Infantil y Primaria",
         "initiative": "CEIP Tesejerague",
         "resources": "",
@@ -2551,7 +2551,7 @@
       "properties": {
         "id": "79dc0402-5e05-4685-a112-96169f1b9092",
         "name": "Asociación de Italianos Amigos de Fuerteventura",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Formal de Personas Migradas",
         "initiative": "ADIAF",
         "resources": "",
@@ -2580,7 +2580,7 @@
       "properties": {
         "id": "af3f9af8-5acc-492f-b84d-123faca4384e",
         "name": "Asociación de Madres y Padres Buenaventura | CEIP del Castillo",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación de Madres y Padres de Alumnos (AMPA)",
         "initiative": "AMPA Buenaventura",
         "resources": "",
@@ -2667,7 +2667,7 @@
       "properties": {
         "id": "19339619-2af2-4b90-a13b-cb3ed43ba393",
         "name": "Centro de Mayores de Morro Jable (Ayuntamiento de Pájara)",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Unidad Especializada: Mayores / 3ª Edad",
         "initiative": "Centro de Mayores de Morro Jable",
         "resources": "",
@@ -2696,7 +2696,7 @@
       "properties": {
         "id": "54967958-f7e3-488e-93e5-da5802f7ddfd",
         "name": "Asociación de Emprendedoras y Empresarias Savia Canarias",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Empresarial",
         "initiative": "Savia Canarias",
         "resources": "",
@@ -2723,7 +2723,7 @@
       "properties": {
         "id": "dae49d82-11f1-4f34-b04a-bd5113fcacc9",
         "name": "Colegio de Educación Infantil y Primaria Villaverde",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Infantil y Primaria",
         "initiative": "CEIP Villaverde",
         "resources": "",
@@ -2781,7 +2781,7 @@
       "properties": {
         "id": "15ff6f19-3140-40fd-a3b9-afe2280ec93f",
         "name": "Centro de Educación Infantil y Primaria Cristóbal García Blairzy",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Centro Público de Educación Infantil y Primaria",
         "initiative": "CEIP Cristóbal García Blairzy",
         "resources": "",
@@ -2810,7 +2810,7 @@
       "properties": {
         "id": "c21ee6fb-768e-47c4-b67c-d5f1a6b80283",
         "name": "Asociación de Personas con Discapacidad Visual y Auditiva",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación o Grupo de Apoyo de Personas con Necesidades Especiales",
         "initiative": "ADIVIA",
         "resources": "",
@@ -2839,7 +2839,7 @@
       "properties": {
         "id": "968d5c75-b3a1-4b99-b045-2cbf93d247d8",
         "name": "Asociación Española Contra el Cáncer",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación o Grupo de Apoyo de Personas con Necesidades Especiales",
         "initiative": "AECC Las Palmas",
         "resources": "",
@@ -2897,7 +2897,7 @@
       "properties": {
         "id": "92865272-e95b-486e-b53c-0f6738865c9f",
         "name": "Parranda Juan Peña Cerrés",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Cultural",
         "initiative": "Parranda Juan Peña Cerrés",
         "resources": "",
@@ -2926,7 +2926,7 @@
       "properties": {
         "id": "b7c112cf-a8e8-4933-923a-8626172baf9a",
         "name": "Asociación de Abogados Prodefensa de los Animales",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación o Grupo Ecologista",
         "initiative": "PROTA",
         "resources": "",
@@ -2955,7 +2955,7 @@
       "properties": {
         "id": "380c8bf3-7de3-465f-b6af-cd7331556d53",
         "name": "Asociación Cultural y Deportiva Batucada Sunfest Fuerteventura",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Cultural",
         "initiative": "Batucada Sunfest Fuerteventura",
         "resources": "",
@@ -2984,7 +2984,7 @@
       "properties": {
         "id": "fd1bd9b5-1dc6-4b8a-8a1f-d42b77db74f4",
         "name": "Asociación de Pequeños y Medianos Empresarios del Municipio de Pájara | ALTABA",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Empresarial",
         "initiative": "ALTABA",
         "resources": "",
@@ -3187,7 +3187,7 @@
       "properties": {
         "id": "c5358e1f-bc93-4949-aded-17786028dd89",
         "name": "Stronger Together - Asociacion de Extranjeros",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación Formal de Personas Migradas",
         "initiative": "Stronger Together - Asociacion de Extranjeros",
         "resources": "",
@@ -3245,7 +3245,7 @@
       "properties": {
         "id": "459d51db-df37-45fb-af68-e1b8c08e7d8a",
         "name": "Asociación de Voluntarios de Ayuda a la Naturaleza de Fuerteventura",
-        "sector": "Servicios",
+        "sector": "Servicio",
         "subjectType": "Asociación o Grupo Ecologista",
         "initiative": "AVANFUER",
         "resources": "",
