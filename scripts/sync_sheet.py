@@ -209,6 +209,27 @@ def rows_to_features(rows, form_extra=None):
     return features, warnings
 
 
+def unify_case(features, key):
+    """Si un mismo valor llega escrito con distintas mayusculas/espacios
+    (p.ej. "Asociación Cultural" y "Asociación cultural"), el filtro del mapa
+    los toma por categorias distintas. Aqui se agrupan ignorando mayusculas y
+    se deja en todos la grafia mas usada (en empate, la que tiene mas
+    mayusculas)."""
+    groups = {}
+    for f in features:
+        v = f["properties"].get(key, "")
+        if v:
+            groups.setdefault(re.sub(r"\s+", " ", v).strip().lower(), {}).setdefault(v, 0)
+            groups[re.sub(r"\s+", " ", v).strip().lower()][v] += 1
+    best = {}
+    for k, variants in groups.items():
+        best[k] = max(variants, key=lambda s: (variants[s], sum(c.isupper() for c in s)))
+    for f in features:
+        v = f["properties"].get(key, "")
+        if v:
+            f["properties"][key] = best[re.sub(r"\s+", " ", v).strip().lower()]
+
+
 def main():
     sheet_id = os.environ.get("SHEET_ID")
     gid = os.environ.get("SHEET_GID")
@@ -222,6 +243,8 @@ def main():
 
     header, rows = fetch_csv_rows(sheet_id, gid)
     features, warnings = rows_to_features(rows, form_extra)
+    unify_case(features, "subjectType")
+    unify_case(features, "sector")
 
     missing_subject = [f["properties"]["name"] for f in features if not f["properties"]["subjectType"]]
     if missing_subject:
