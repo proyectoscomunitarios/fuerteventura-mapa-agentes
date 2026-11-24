@@ -3,7 +3,7 @@
   "metadata": {
     "source": "google-sheet-migrado",
     "sheet_id": "1m1UVzUPzZdOBWmSFShpe8835YpWmHdWXnVtW7531tUY",
-    "row_count": 116
+    "row_count": 117
   },
   "features": [
     {
@@ -347,35 +347,6 @@
         "coordinates": [
           -13.8623541,
           28.496484
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "f5560050-8376-4aea-8993-ceaefd47eceb",
-        "name": "Asociación Altihay",
-        "sector": "Proyecto",
-        "subjectType": "",
-        "initiative": "",
-        "resources": "",
-        "municipality": "Puerto del Rosario",
-        "province": "Las Palmas",
-        "island": "Fuerteventura",
-        "address": "Calle Goya 3, Local 3; 35600, Puerto del Rosario, Las Palmas",
-        "phones": [
-          "669 512 694"
-        ],
-        "emails": [
-          "altihay@felgtb.org"
-        ],
-        "url": ""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -13.8711659,
-          28.4986813
         ]
       }
     },
@@ -3353,6 +3324,64 @@
         "coordinates": [
           -13.8714338,
           28.470408
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "7a6462ca-3b6a-4424-9f67-7484a0492796",
+        "name": "ONG ALTIHAY Fuerteventura - Colectivo de Gays, Lesbianas, Transexuales Bisexuales, Intersexuales y Simpatizantes de Canarias",
+        "sector": "Servicio",
+        "subjectType": "Asociaciones LGTBIQ+",
+        "initiative": "Servicio de Atención, Orientación e Información a Personas LGTBI+.\n\nServicio de Atención Integral a Personas Trans* e Intersex+.\n\nServicio de Atención Integral a Familias LGTBI+ y de Menores Trans e Intersex+.\n\nServicio de Orientación y Apoyo a Jóvenes LGTBI+.\n\nServicio de Orientación y Apoyo para Alumnado, Profesorado, Padres y Madres.\n\nServicio de Pruebas Rápidas de VIH, Hepatitis C y Sífilis.\n\nServicio de Counselling y Post-Counselling sobre ITS.\n\nServicio de Asesoramiento Jurídico y Derivación Psicológica.",
+        "resources": "https://www.altihayfuerteventura.org/",
+        "municipality": "Puerto del Rosario",
+        "province": "Las Palmas",
+        "island": "Fuerteventura",
+        "address": "Calle Goya 3, Local 3; 35600, Puerto del Rosario, Las Palmas",
+        "phones": [
+          "669512694"
+        ],
+        "emails": [
+          "altihay@altihayfuerteventura.org"
+        ],
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -13.8711659,
+          28.4986813
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "6391d8db-2613-403d-873c-0249e426a11a",
+        "name": "Asociación Compartiendo Metas",
+        "sector": "Servicio",
+        "subjectType": "Asociación Social",
+        "initiative": "ACTIVE SÉNECA, MOVIENDO PÁJARA, MOVIENDO ANTIGUA, CONTAMOS CONTIGO FUERTEVENTURA.",
+        "resources": "http://www.compartiendometas.org/Sobre-nosotros/",
+        "municipality": "Puerto del Rosario",
+        "province": "Las Palmas",
+        "island": "Fuerteventura",
+        "address": "Secundino Alonso. 24, 2ºb",
+        "phones": [
+          "641051348"
+        ],
+        "emails": [
+          "fuerteventura@compartiendometas.org"
+        ],
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -13.8617952,
+          28.4985197
         ]
       }
     }
